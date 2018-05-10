@@ -1,33 +1,36 @@
 package com.meetmyage.com.meetmyageapp.pages;
-
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.support.design.widget.FloatingActionButton;
+import android.widget.TextView;
 
 import com.facebook.login.LoginManager;
 import com.meetmyage.com.meetmyageapp.R;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
 import model.Profile;
+import util.SessionManagementUtil;
 
-/**
- * A simple {@link Fragment} subclass.
- * Activities that contain this fragment must implement the
- * {@link ProfileFragment.OnFragmentInteractionListener} interface
- * to handle interaction events.
- * Use the {@link ProfileFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
+// Managing the Profile in this class
 public class ProfileFragment extends Fragment {
 
     private OnFragmentInteractionListener mListener;
-    private View mView;
+
+    @BindView(R.id.profileName) TextView mProfileName;
+    @BindView(R.id.profileWork) TextView mProfileWork;
+    @BindView(R.id.profileStory) TextView mProfileStory;
+    @BindView(R.id.fab) FloatingActionButton mFab;
+
     public ProfileFragment() {
         // Required empty public constructor
     }
@@ -41,17 +44,26 @@ public class ProfileFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        mView =  inflater.inflate(R.layout.fragment_profile, container, false);
-
-        return mView;
+        View view =  inflater.inflate(R.layout.fragment_profile, container, false);
+        ButterKnife.bind(this,view);
+        return view;
     }
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-        FloatingActionButton fab = (FloatingActionButton) getView().findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
+        Profile profile = SessionManagementUtil.getUserData();
+        mProfileName.setText(profile.getProfileName());
+        mProfileStory.setText(profile.getProfileStory());
+        mProfileWork.setText(profile.getProfileWork());
+
+        mFab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //start edit page
+                FragmentTransaction trans = getFragmentManager()
+                        .beginTransaction();
+                trans.replace(R.id.root_frame, new EditProfileFragment());
+                trans.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
+                trans.addToBackStack(null);
+                trans.commit();
             }
         });
     }

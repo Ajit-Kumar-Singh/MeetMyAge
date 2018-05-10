@@ -40,7 +40,7 @@ public class SessionManagementUtil {
 
     // Constructor
     public SessionManagementUtil(Context context){
-        this._context = context;
+        _context = context;
         pref = _context.getSharedPreferences(PREF_NAME, PRIVATE_MODE);
         editor = pref.edit();
     }
@@ -53,6 +53,21 @@ public class SessionManagementUtil {
         editor.putBoolean(IS_LOGIN, true);
 
         editor.putInt(KEY_ID,id);
+        editor.putString(KEY_WORK,work);
+        editor.putString(KEY_ABOUT,about);
+        // Storing name in pref
+        editor.putString(KEY_NAME, name);
+
+        // Storing email in pref
+        editor.putString(KEY_EMAIL, email);
+
+        // commit changes
+        editor.commit();
+    }
+
+    public static void updateProfile(String name, String email, String work, String about){
+        // Storing login value as TRUE
+        editor.putBoolean(IS_LOGIN, true);
         editor.putString(KEY_WORK,work);
         editor.putString(KEY_ABOUT,about);
         // Storing name in pref
@@ -78,7 +93,7 @@ public class SessionManagementUtil {
      * Quick check for login
      * **/
     // Get Login State
-    public boolean isLoggedIn(){
+    public static boolean isLoggedIn(){
         return pref.getBoolean(IS_LOGIN, false);
     }
 }

@@ -13,16 +13,15 @@ public class ProfilePost {
     @Expose
     private String story;
 
+    @SerializedName("work")
+    @Expose
+    private String work;
+
     public ProfilePost(String name, String story, String work) {
         this.name = name;
         this.story = story;
         this.work = work;
     }
-
-    @SerializedName("work")
-    @Expose
-    private String work;
-
     public String getName() {
         return name;
     }

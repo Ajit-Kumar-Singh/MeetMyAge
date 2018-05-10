@@ -33,7 +33,7 @@ import retrofit2.Response;
 import util.SessionManagementUtil;
 
 /**
- * A login screen that offers login via email/password.
+ * A login screen that offers login via Facebook
  */
 public class LoginActivity extends AppCompatActivity {
     private static String TAG = LoginActivity.class.getSimpleName();
@@ -43,8 +43,10 @@ public class LoginActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         session = new SessionManagementUtil(getApplicationContext());
-        FacebookSdk.sdkInitialize(getApplicationContext());
         boolean loggedIn = AccessToken.getCurrentAccessToken() != null;
+
+        //Commented for testing
+
 //        if (loggedIn)
 //        {
 //            Intent intent = new Intent(LoginActivity.this, TabbedLayout.class);
@@ -59,7 +61,7 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void onSuccess(LoginResult loginResult) {
                 loginButton.setVisibility(View.INVISIBLE);
-                getAndSaveUserDetails(loginResult,loginButton);
+                getAndSaveUserDetails(loginResult);
             }
 
             @Override
@@ -69,7 +71,7 @@ public class LoginActivity extends AppCompatActivity {
 
             @Override
             public void onError(FacebookException exception) {
-                Log.d(TAG, "Facebook exception"+exception.toString());
+                Log.d(TAG, "Facebook exception "+exception.toString());
             }
         });
     }
@@ -80,7 +82,7 @@ public class LoginActivity extends AppCompatActivity {
         callbackManager.onActivityResult(requestCode, resultCode, data);
     }
 
-    protected void getAndSaveUserDetails(LoginResult loginResult, final LoginButton loginButton) {
+    protected void getAndSaveUserDetails(LoginResult loginResult) {
         GraphRequest data_request = GraphRequest.newMeRequest(
                 loginResult.getAccessToken(), new GraphRequest.GraphJSONObjectCallback() {
                     @Override
@@ -88,7 +90,7 @@ public class LoginActivity extends AppCompatActivity {
                             JSONObject json_object,
                             GraphResponse response)
                     {
-                     Log.d(TAG, "Facebook value"+json_object.toString());
+                     Log.d(TAG, "Facebook Profile data "+json_object.toString());
                      // Post the Profile data to Server
                         ApiInterface apiService =
                                 ApiClient.getClient().create(ApiInterface.class);
@@ -104,6 +106,7 @@ public class LoginActivity extends AppCompatActivity {
                             @Override
                             public void onResponse(Call<Profile> call, Response<Profile> response) {
                                 Profile profile = response.body();
+                                // Creating a session Profile
                                 SessionManagementUtil.createLoginSession(profile.getProfileId(),profile.getProfileName(),"",profile.getProfileStory(),profile.getProfileWork());
                                 Intent intent = new Intent(LoginActivity.this, TabbedLayout.class);
                                 startActivity(intent);
@@ -116,12 +119,11 @@ public class LoginActivity extends AppCompatActivity {
                             }
                         });
                     }
-
                 });
 
+        //Facebook permission for data required for the app.
         Bundle permission_param = new Bundle();
-        permission_param.putString("fields", "id,name,email,picture.width(120).height(120)");
+        permission_param.putString("fields","id,name,email,picture.width(120).height(120)");
         data_request.setParameters(permission_param);
         data_request.executeAsync();
     }}
-

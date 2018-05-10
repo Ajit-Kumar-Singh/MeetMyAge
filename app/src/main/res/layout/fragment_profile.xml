@@ -21,20 +21,22 @@
                 android:layout_height="150dp"
                 android:src="@drawable/man"/>
             <TextView
+                android:id="@+id/userName"
                 android:layout_marginTop="10dp"
                 android:layout_gravity="center_horizontal"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Wiliam Snoe"
+                android:text=""
                 android:textColor="#fff"
                 android:textStyle="bold"
                 android:textSize="21sp"/>
             <TextView
+                android:id="@+id/profileStory"
                 android:layout_marginTop="10dp"
                 android:layout_gravity="center_horizontal"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Live Life King size"
+                android:text=""
                 android:textColor="#fff"
                 android:textStyle="italic"
                 android:textSize="21sp"/>
@@ -56,12 +58,13 @@
                 android:layout_height="16dp"
                 android:src="@drawable/ic_email_blue_24dp"/>
             <TextView
+                android:id="@+id/emailId"
                 android:textStyle="bold"
                 android:layout_gravity="center_vertical"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:paddingLeft="20dp"
-                android:text="Wiliam@gmail.com"/>
+                android:text=""/>
         </LinearLayout>
         <LinearLayout
             android:layout_marginTop="15dp"
@@ -74,13 +77,13 @@
                 android:layout_height="16dp"
                 android:src="@drawable/ic_work_black_24dp"/>
             <TextView
+                android:id="@+id/profileWork"
                 android:textStyle="bold"
-
                 android:layout_gravity="center_vertical"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:paddingLeft="20dp"
-                android:text="+266 225 225"/>
+                android:text=""/>
         </LinearLayout>
 
     </LinearLayout>

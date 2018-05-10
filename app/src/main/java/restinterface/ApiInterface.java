@@ -20,4 +20,7 @@ public interface ApiInterface {
 
     @POST("/profiles")
     Call<Profile> postProfile(@Body ProfilePost profile);
+
+    @POST("/profiles/{id}")
+    Call<Profile> updateProfile(@Path("id") int id ,@Body ProfilePost profile);
 }

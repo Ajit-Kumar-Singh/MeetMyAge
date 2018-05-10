@@ -1,50 +1,29 @@
 package com.meetmyage.com.meetmyageapp.pages;
 
-import android.content.Intent;
+import android.content.pm.ActivityInfo;
 import android.net.Uri;
 import android.support.design.widget.TabLayout;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
-
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.os.Bundle;
-import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuItem;
-import android.view.View;
-import android.view.ViewGroup;
 
-import android.widget.TextView;
-
-import com.facebook.login.LoginManager;
 import com.meetmyage.com.meetmyageapp.R;
 
-public class TabbedLayout extends AppCompatActivity implements ProfileFragment.OnFragmentInteractionListener{
-
-    /**
-     * The {@link android.support.v4.view.PagerAdapter} that will provide
-     * fragments for each of the sections. We use a
-     * {@link FragmentPagerAdapter} derivative, which will keep every
-     * loaded fragment in memory. If this becomes too memory intensive, it
-     * may be best to switch to a
-     * {@link android.support.v4.app.FragmentStatePagerAdapter}.
-     */
+public class TabbedLayout extends AppCompatActivity implements ProfileFragment.OnFragmentInteractionListener, EditProfileFragment.OnFragmentInteractionListener,
+EventsDetailsFragment.OnFragmentInteractionListener,
+CreateGroupFragment.OnFragmentInteractionListener,
+GroupDetailsFragment.OnFragmentInteractionListener,
+ProfileFragmentHolder.OnFragmentInteractionListener
+{
     private SectionsPagerAdapter mSectionsPagerAdapter;
 
-    /**
-     * The {@link ViewPager} that will host the section contents.
-     */
     private ViewPager mViewPager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_tabbedlayout);
-
+        this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 
         // Create the adapter that will return a fragment for each of the three
         // primary sections of the activity.
@@ -55,48 +34,25 @@ public class TabbedLayout extends AppCompatActivity implements ProfileFragment.O
         mViewPager.setAdapter(mSectionsPagerAdapter);
 
         TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
-        TabLayout.Tab firstTab = tabLayout.newTab(); // Create a new Tab names "First Tab"
-        firstTab.setIcon(R.drawable.ic_group_black_24dp); // set an icon for the first tab
-        tabLayout.addTab(firstTab); // add  the tab to the TabLayout
+        TabLayout.Tab firstTab = tabLayout.newTab();
+        firstTab.setIcon(R.drawable.ic_group_black_24dp);
+        tabLayout.addTab(firstTab);
 
-        TabLayout.Tab secondTab = tabLayout.newTab(); // Create a new Tab names "First Tab"
-        secondTab.setIcon(R.drawable.ic_add_black_24dp); // set an icon for the first tab
-        tabLayout.addTab(secondTab); // add  the tab to the TabLayout
+        TabLayout.Tab secondTab = tabLayout.newTab();
+        secondTab.setIcon(R.drawable.ic_add_black_24dp);
+        tabLayout.addTab(secondTab);
 
-        TabLayout.Tab thirdtab = tabLayout.newTab(); // Create a new Tab names "First Tab"
-        thirdtab.setIcon(R.drawable.ic_whatshot_black_24dp); // set an icon for the first tab
-        tabLayout.addTab(thirdtab); // add  the tab to the TabLayout
+        TabLayout.Tab thirdtab = tabLayout.newTab();
+        thirdtab.setIcon(R.drawable.ic_whatshot_black_24dp);
+        tabLayout.addTab(thirdtab);
 
-        TabLayout.Tab fourthTab = tabLayout.newTab(); // Create a new Tab names "First Tab"
-        fourthTab.setIcon(R.drawable.ic_person_outline_black_24dp); // set an icon for the first tab
-        tabLayout.addTab(fourthTab); // add  the tab to the TabLayout
+        TabLayout.Tab fourthTab = tabLayout.newTab();
+        fourthTab.setIcon(R.drawable.ic_person_outline_black_24dp);
+        tabLayout.addTab(fourthTab);
 
         mViewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
         tabLayout.addOnTabSelectedListener(new TabLayout.ViewPagerOnTabSelectedListener(mViewPager));
 
-    }
-
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_main2, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
     }
 
     @Override
@@ -107,36 +63,5 @@ public class TabbedLayout extends AppCompatActivity implements ProfileFragment.O
     @Override
     public void onPointerCaptureChanged(boolean hasCapture) {
         //Empty for now used for interaction
-    }
-
-    /**
-     * A {@link FragmentPagerAdapter} that returns a fragment corresponding to
-     * one of the sections/tabs/pages.
-     */
-    public class SectionsPagerAdapter extends FragmentPagerAdapter {
-
-        public SectionsPagerAdapter(FragmentManager fm) {
-            super(fm);
-        }
-
-        // This determines the fragment for each tab
-        @Override
-        public Fragment getItem(int position) {
-            if (position == 0) {
-                return new ProfileFragment();
-            } else if (position == 1) {
-                return new ProfileFragment();
-            } else if (position == 2) {
-                return new ProfileFragment();
-            } else {
-                return new ProfileFragment();
-            }
-        }
-
-        // This determines the number of tabs
-        @Override
-        public int getCount() {
-            return 4;
-        }
     }
 }
