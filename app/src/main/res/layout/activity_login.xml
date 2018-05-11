@@ -10,7 +10,7 @@
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="200dp"
     android:layout_gravity="center_vertical"
-    tools:context=".pages.LoginActivity">
+    tools:context="views.pages.LoginActivity">
 
     <com.facebook.login.widget.LoginButton
         android:id="@+id/facbookSignin"
