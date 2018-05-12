@@ -1,8 +1,5 @@
 package data;
-import java.util.HashMap;
-
 import android.content.Context;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 
@@ -40,9 +37,12 @@ public class SessionManagementUtil {
 
     // Constructor
     public SessionManagementUtil(Context context){
-        _context = context;
-        pref = _context.getSharedPreferences(PREF_NAME, PRIVATE_MODE);
-        editor = pref.edit();
+        if (_context == null)
+        {
+            _context = context;
+            pref = _context.getSharedPreferences(PREF_NAME, PRIVATE_MODE);
+            editor = pref.edit();
+        }
     }
 
     /**

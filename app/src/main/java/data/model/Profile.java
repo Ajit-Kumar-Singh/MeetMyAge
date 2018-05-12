@@ -1,29 +1,34 @@
 package data.model;
-import com.google.gson.annotations.SerializedName;
 
+import com.google.gson.annotations.Expose;
+import com.google.gson.annotations.SerializedName;
 
 public class Profile {
 
-    private int profileId;
+    @SerializedName("profileId")
+    @Expose
+    private Integer profileId;
     @SerializedName("profileName")
+    @Expose
     private String profileName;
     @SerializedName("profileStory")
+    @Expose
     private String profileStory;
     @SerializedName("profileWork")
+    @Expose
     private String profileWork;
+    @SerializedName("profileEmail")
+    @Expose
+    private String profileEmail;
+    @SerializedName("location")
+    @Expose
+    private Location location;
 
-    public Profile(int profileId, String profileName, String profileStory, String profileWork) {
-        this.profileId = profileId;
-        this.profileName = profileName;
-        this.profileStory = profileStory;
-        this.profileWork = profileWork;
-    }
-
-    public int getProfileId() {
+    public Integer getProfileId() {
         return profileId;
     }
 
-    public void setProfileId(int profileId) {
+    public void setProfileId(Integer profileId) {
         this.profileId = profileId;
     }
 
@@ -51,5 +56,19 @@ public class Profile {
         this.profileWork = profileWork;
     }
 
+    public String getProfileEmail() {
+        return profileEmail;
+    }
 
+    public void setProfileEmail(String profileEmail) {
+        this.profileEmail = profileEmail;
+    }
+
+    public Location getLocation() {
+        return location;
+    }
+
+    public void setLocation(Location location) {
+        this.location = location;
+    }
 }
