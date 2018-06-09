@@ -77,8 +77,8 @@ public class EditProfileFragment extends Fragment {
             @Override
             public void onResponse(Call<Profile> call, Response<Profile> response) {
                 Profile responseProfile = response.body();
-                SessionManagementUtil.updateProfile(
-                        responseProfile.getProfileName(),"",responseProfile.getProfileWork(),responseProfile.getProfileStory());
+//                SessionManagementUtil.updateProfile(
+//                        responseProfile.getProfileName(),"",responseProfile.getProfileWork(),responseProfile.getProfileStory());
                 FragmentTransaction trans = getFragmentManager()
                         .beginTransaction();
                 trans.replace(R.id.root_frame, new ProfileFragment());

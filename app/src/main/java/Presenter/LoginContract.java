@@ -19,13 +19,9 @@ public interface LoginContract {
 
     interface  Presenter {
         void fbLoginButtonClicked(LoginButton loginButton);
-
         void saveProfileToServer(LoginResult loginResult);
-
         void saveProfileToSessionPreference(Profile profile);
-
         boolean isLoggedIn();
-
         void onActivityResult(int requestCode, int resultCode, Intent data);
     }
 }

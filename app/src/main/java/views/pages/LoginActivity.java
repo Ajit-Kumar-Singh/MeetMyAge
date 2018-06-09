@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 
-import com.facebook.FacebookSdk;
 import com.facebook.login.widget.LoginButton;
 import com.meetmyage.com.meetmyageapp.R;
 
@@ -21,13 +20,12 @@ public class LoginActivity extends AppCompatActivity implements LoginContract.vi
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        FacebookSdk.sdkInitialize(getApplicationContext());
         mLoginPresenter = new LoginPresenterImpl(this,getApplicationContext());
-        boolean loggedIn = mLoginPresenter.isLoggedIn();
-        if (loggedIn)
-        {
-
-        }
+//        boolean loggedIn = mLoginPresenter.isLoggedIn();
+//        if (loggedIn)
+//        {
+//
+//        }
 
         setContentView(R.layout.activity_login);
         final LoginButton loginButton = (LoginButton) findViewById(R.id.facbookSignin);

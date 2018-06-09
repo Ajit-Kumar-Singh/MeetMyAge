@@ -24,7 +24,7 @@ public class ProfileFragment extends Fragment {
 
     private OnFragmentInteractionListener mListener;
 
-    @BindView(R.id.profileName) TextView mProfileName;
+    @BindView(R.id.userName) TextView mProfileName;
     @BindView(R.id.profileWork) TextView mProfileWork;
     @BindView(R.id.profileStory) TextView mProfileStory;
     @BindView(R.id.fab) FloatingActionButton mFab;

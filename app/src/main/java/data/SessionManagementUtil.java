@@ -1,8 +1,14 @@
 package data;
+
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
+import android.util.Log;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+
+import data.model.Location;
 import data.model.Profile;
 
 public class SessionManagementUtil {
@@ -35,6 +41,9 @@ public class SessionManagementUtil {
 
     public static final String KEY_ABOUT = "aboutme";
 
+    public  static final String KEY_LOCATION = "location";
+
+    public static Gson gson = new GsonBuilder().serializeNulls().create();
     // Constructor
     public SessionManagementUtil(Context context){
         if (_context == null)
@@ -48,7 +57,7 @@ public class SessionManagementUtil {
     /**
      * Create login session
      * */
-    public static void createLoginSession(int id, String name, String email, String work, String about){
+    public static void createLoginSession(int id, String name, String email, String work, String about, Location loc){
         // Storing login value as TRUE
         editor.putBoolean(IS_LOGIN, true);
 
@@ -61,11 +70,15 @@ public class SessionManagementUtil {
         // Storing email in pref
         editor.putString(KEY_EMAIL, email);
 
+        String json = gson.toJson(loc); // myObject - instance of MyObject
+        editor.putString(KEY_LOCATION, json);
+        editor.commit();
+
         // commit changes
         editor.commit();
     }
 
-    public static void updateProfile(String name, String email, String work, String about){
+    public static void updateProfile(String name, String email, String work, String about,Location loc){
         // Storing login value as TRUE
         editor.putBoolean(IS_LOGIN, true);
         editor.putString(KEY_WORK,work);
@@ -75,14 +88,29 @@ public class SessionManagementUtil {
 
         // Storing email in pref
         editor.putString(KEY_EMAIL, email);
+        Log.i("hello ",gson.toJson(loc));
+
+        editor.putString(KEY_LOCATION,gson.toJson(loc));
 
         // commit changes
         editor.commit();
     }
+
+    public static void updateLocation(Location loc)
+    {
+        editor.putString(KEY_LOCATION,gson.toJson(loc));
+        editor.commit();
+    }
      public static Profile getUserData()
      {
-         return new Profile(pref.getInt(KEY_ID,0), pref.getString(KEY_NAME,""), pref.getString(KEY_ABOUT,""),pref.getString(KEY_WORK,""));
+         Location loc = new Location();
+         return null;
+         if (pref.getString(KEY_LOCATION,"")!=)
+
+        return new Profile(pref.getInt(KEY_ID,0), pref.getString(KEY_NAME,""), pref.getString(KEY_ABOUT,""),pref.getString(KEY_WORK,""), new Location());
      }
+
+
     public void clearAllData(){
         // Clearing all data from Shared Preferences
         editor.clear();

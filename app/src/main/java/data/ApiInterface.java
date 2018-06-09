@@ -3,6 +3,7 @@ package data;
 
 import java.util.List;
 
+import data.model.FBRequest;
 import data.model.Group;
 import data.model.Profile;
 import data.model.ProfilePost;
@@ -25,4 +26,8 @@ public interface ApiInterface {
 
     @POST("/profiles/{id}")
     Call<Profile> updateProfile(@Path("id") int id ,@Body ProfilePost profile);
+
+    @POST("/profiles/validateFacebookToken")
+    Call<Profile> validateAndFetchFBProfile(@Body FBRequest fbToken);
+
 }

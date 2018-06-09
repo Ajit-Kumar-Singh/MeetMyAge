@@ -2,7 +2,6 @@ package Presenter;
 
 import android.content.Context;
 import android.content.Intent;
-import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 
@@ -10,19 +9,14 @@ import com.facebook.AccessToken;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
-import com.facebook.GraphRequest;
-import com.facebook.GraphResponse;
 import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
-
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import data.ApiClient;
 import data.ApiInterface;
 import data.SessionManagementUtil;
+import data.model.FBRequest;
 import data.model.Profile;
-import data.model.ProfilePost;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -68,25 +62,12 @@ public class LoginPresenterImpl  implements LoginContract.Presenter {
 
     @Override
     public void saveProfileToServer(LoginResult loginResult) {
-        GraphRequest data_request = GraphRequest.newMeRequest(
-                loginResult.getAccessToken(), new GraphRequest.GraphJSONObjectCallback() {
-                    @Override
-                    public void onCompleted(
-                            JSONObject json_object,
-                            GraphResponse response)
-                    {
-                        Log.d(TAG, "Facebook Profile data "+json_object.toString());
-                        // Post the Profile data to Server
-                        ApiInterface apiService =
+        ApiInterface apiService =
                                 ApiClient.getClient().create(ApiInterface.class);
 
                         Call<Profile> call = null;
-                        try {
-                            mLoginView.showProgressBar();
-                            call = apiService.postProfile(new ProfilePost(json_object.getString("name"),"",""));
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
+                        mLoginView.showProgressBar();
+                        call = apiService.validateAndFetchFBProfile(new FBRequest(loginResult.getAccessToken().getToken()));
 
                         call.enqueue(new Callback<Profile>() {
                             @Override
@@ -95,6 +76,7 @@ public class LoginPresenterImpl  implements LoginContract.Presenter {
                                 if (profile != null)
                                 {
                                     saveProfileToSessionPreference(profile);
+                                    mLoginView.onSuccess();
                                 }
                                 else
                                 {
@@ -110,19 +92,11 @@ public class LoginPresenterImpl  implements LoginContract.Presenter {
                                 Log.e(TAG, t.toString());
                             }
                         });
-                    }
-                });
-
-        //Facebook permission for data required for the app.
-        Bundle permission_param = new Bundle();
-        permission_param.putString("fields","id,name,email,picture.width(120).height(120)");
-        data_request.setParameters(permission_param);
-        data_request.executeAsync();
     }
 
     @Override
     public void saveProfileToSessionPreference(Profile profile) {
-        SessionManagementUtil.createLoginSession(profile.getProfileId(),profile.getProfileName(),"",profile.getProfileStory(),profile.getProfileWork());
+        SessionManagementUtil.createLoginSession(profile.getProfileId(),profile.getProfileName(),"",profile.getProfileStory(),profile.getProfileWork(),profile.getLocation());
         mLoginView.hideProgressBar();
 
     }
