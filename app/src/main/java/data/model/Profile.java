@@ -24,6 +24,9 @@ public class Profile {
     @Expose
     private Location location;
 
+    public Profile(int anInt, String string, String string1, String string2) {
+    }
+
     public Integer getProfileId() {
         return profileId;
     }
