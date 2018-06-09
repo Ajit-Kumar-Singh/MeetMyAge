@@ -17,6 +17,7 @@ import com.meetmyage.com.meetmyageapp.R;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import data.model.Location;
 import data.model.Profile;
 import data.model.ProfilePost;
 import data.ApiClient;
@@ -77,8 +78,8 @@ public class EditProfileFragment extends Fragment {
             @Override
             public void onResponse(Call<Profile> call, Response<Profile> response) {
                 Profile responseProfile = response.body();
-//                SessionManagementUtil.updateProfile(
-//                        responseProfile.getProfileName(),"",responseProfile.getProfileWork(),responseProfile.getProfileStory());
+                SessionManagementUtil.updateProfile(
+                        responseProfile.getProfileName(),"",responseProfile.getProfileWork(),responseProfile.getProfileStory(),new Location());
                 FragmentTransaction trans = getFragmentManager()
                         .beginTransaction();
                 trans.replace(R.id.root_frame, new ProfileFragment());

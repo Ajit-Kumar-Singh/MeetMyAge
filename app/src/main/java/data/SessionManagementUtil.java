@@ -59,6 +59,7 @@ public class SessionManagementUtil {
      * */
     public static void createLoginSession(int id, String name, String email, String work, String about, Location loc){
         // Storing login value as TRUE
+        editor = pref.edit();
         editor.putBoolean(IS_LOGIN, true);
 
         editor.putInt(KEY_ID,id);
@@ -73,13 +74,11 @@ public class SessionManagementUtil {
         String json = gson.toJson(loc); // myObject - instance of MyObject
         editor.putString(KEY_LOCATION, json);
         editor.commit();
-
-        // commit changes
-        editor.commit();
     }
 
     public static void updateProfile(String name, String email, String work, String about,Location loc){
         // Storing login value as TRUE
+        editor= pref.edit();
         editor.putBoolean(IS_LOGIN, true);
         editor.putString(KEY_WORK,work);
         editor.putString(KEY_ABOUT,about);
@@ -98,6 +97,7 @@ public class SessionManagementUtil {
 
     public static void updateLocation(Location loc)
     {
+        editor = pref.edit();
         editor.putString(KEY_LOCATION,gson.toJson(loc));
         editor.commit();
     }
