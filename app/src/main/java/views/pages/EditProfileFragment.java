@@ -17,15 +17,14 @@ import com.meetmyage.com.meetmyageapp.R;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import data.model.Location;
-import data.model.Profile;
-import data.model.ProfilePost;
 import data.ApiClient;
 import data.ApiInterface;
+import data.SessionManagementUtil;
+import data.model.Location;
+import data.model.Profile;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-import data.SessionManagementUtil;
 
 public class EditProfileFragment extends Fragment {
 
@@ -52,8 +51,15 @@ public class EditProfileFragment extends Fragment {
         View view = null;
         view = inflater.inflate(R.layout.fragment_edit_profile, container, false);
         ButterKnife.bind(this,view);
+
+        //Set Initial data
+        Profile savedProfile = SessionManagementUtil.getUserData();
+        profileName.setText(savedProfile.getProfileName());
+        profileStory.setText(savedProfile.getProfileStory());
+        profileWork.setText(savedProfile.getProfileWork());
         return view;
     }
+
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         saveProfile.setOnClickListener(new View.OnClickListener() {
@@ -72,14 +78,14 @@ public class EditProfileFragment extends Fragment {
 
         Call<Profile> call = null;
         call = apiService.updateProfile(SessionManagementUtil.getUserData().getProfileId(),
-                    new ProfilePost(profileName.getText().toString(),profileStory.getText().toString(),profileWork.getText().toString()));
+                    new Profile(SessionManagementUtil.getUserData().getProfileId(),profileName.getText().toString(),profileStory.getText().toString(),profileWork.getText().toString(),new Location()));
 
         call.enqueue(new Callback<Profile>() {
             @Override
             public void onResponse(Call<Profile> call, Response<Profile> response) {
                 Profile responseProfile = response.body();
                 SessionManagementUtil.updateProfile(
-                        responseProfile.getProfileName(),"",responseProfile.getProfileWork(),responseProfile.getProfileStory(),new Location());
+                        responseProfile.getProfileName(),"",responseProfile.getProfileStory(),responseProfile.getProfileWork(),new Location());
                 FragmentTransaction trans = getFragmentManager()
                         .beginTransaction();
                 trans.replace(R.id.root_frame, new ProfileFragment());

@@ -25,7 +25,7 @@ public interface ApiInterface {
     Call<Profile> postProfile(@Body ProfilePost profile);
 
     @POST("/profiles/{id}")
-    Call<Profile> updateProfile(@Path("id") int id ,@Body ProfilePost profile);
+    Call<Profile> updateProfile(@Path("id") int id ,@Body Profile profile);
 
     @POST("/profiles/validateFacebookToken")
     Call<Profile> validateAndFetchFBProfile(@Body FBRequest fbToken);

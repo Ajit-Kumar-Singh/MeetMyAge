@@ -44,5 +44,6 @@ dependencies {
     compile 'com.squareup.retrofit2:converter-gson:2.0.2'
     compile files('libs/mma-domain-1.0.0-SNAPSHOT.jar')
     compile 'com.jakewharton:butterknife:8.6.0'
+    compile 'de.hdodenhof:circleimageview:1.2.1'
     annotationProcessor 'com.jakewharton:butterknife-compiler:8.6.0'
 }
