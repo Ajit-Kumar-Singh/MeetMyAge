@@ -103,11 +103,7 @@ public class SessionManagementUtil {
     }
      public static Profile getUserData()
      {
-         Location loc = new Location();
-         return null;
-         if (pref.getString(KEY_LOCATION,"")!=)
-
-        return new Profile(pref.getInt(KEY_ID,0), pref.getString(KEY_NAME,""), pref.getString(KEY_ABOUT,""),pref.getString(KEY_WORK,""), new Location());
+         return  new Profile(pref.getInt(KEY_ID,0), pref.getString(KEY_NAME,""), pref.getString(KEY_ABOUT,""),pref.getString(KEY_WORK,""), new Location());
      }
 
 
