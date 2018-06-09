@@ -2,6 +2,7 @@ package views.pages;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 
 import com.facebook.login.widget.LoginButton;
@@ -20,6 +21,8 @@ public class LoginActivity extends AppCompatActivity implements LoginContract.vi
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        ActivityCompat.requestPermissions(LoginActivity.this, new String[] {  android.Manifest.permission.ACCESS_COARSE_LOCATION  },
+                101 );
         mLoginPresenter = new LoginPresenterImpl(this,getApplicationContext());
 //        boolean loggedIn = mLoginPresenter.isLoggedIn();
 //        if (loggedIn)
@@ -36,6 +39,7 @@ public class LoginActivity extends AppCompatActivity implements LoginContract.vi
     @Override
     public void onSuccess() {
         Intent intent = new Intent(LoginActivity.this, TabbedLayout.class);
+
         startActivity(intent);
     }
 
@@ -67,6 +71,7 @@ public class LoginActivity extends AppCompatActivity implements LoginContract.vi
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+
          mLoginPresenter.onActivityResult(requestCode,resultCode,data);
     }
 }

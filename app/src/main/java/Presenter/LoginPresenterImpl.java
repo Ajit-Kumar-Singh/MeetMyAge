@@ -2,6 +2,7 @@ package Presenter;
 
 import android.content.Context;
 import android.content.Intent;
+import android.location.Location;
 import android.util.Log;
 import android.view.View;
 
@@ -14,6 +15,7 @@ import com.facebook.login.widget.LoginButton;
 
 import data.ApiClient;
 import data.ApiInterface;
+import Presenter.location.LocationListenerImpl;
 import data.SessionManagementUtil;
 import data.model.FBRequest;
 import data.model.Profile;
@@ -27,10 +29,11 @@ public class LoginPresenterImpl  implements LoginContract.Presenter {
     private LoginContract.view mLoginView;
     private CallbackManager callbackManager;
     private SessionManagementUtil session;
-
+    Context mContext;
     public LoginPresenterImpl(LoginContract.view view, Context context)
     {
         this.mLoginView = view;
+        mContext = context;
         session = new SessionManagementUtil(context);
     }
 
@@ -43,6 +46,11 @@ public class LoginPresenterImpl  implements LoginContract.Presenter {
             public void onSuccess(LoginResult loginResult) {
                 loginButton.setVisibility(View.INVISIBLE);
                 saveProfileToServer(loginResult);
+                LocationListenerImpl myLocationListener = new LocationListenerImpl(mContext);
+                Location myLocation = myLocationListener.getLocation();
+                Log.i("NEW_Latitude",""+myLocation.getLatitude());
+                Log.i("NEW_Longitude",""+myLocation.getLongitude());
+                myLocationListener.stopUsingGPS();
             }
 
             @Override
