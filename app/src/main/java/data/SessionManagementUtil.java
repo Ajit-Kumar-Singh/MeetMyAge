@@ -99,6 +99,7 @@ public class SessionManagementUtil {
     {
         editor = pref.edit();
         editor.putString(KEY_LOCATION,gson.toJson(loc));
+        Log.d("LOCATION", gson.toJson(loc));
         editor.commit();
     }
      public static Profile getUserData()

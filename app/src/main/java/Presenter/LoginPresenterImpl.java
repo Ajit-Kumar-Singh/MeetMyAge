@@ -19,9 +19,14 @@ import Presenter.location.LocationListenerImpl;
 import data.SessionManagementUtil;
 import data.model.FBRequest;
 import data.model.Profile;
+import data.model.gmaps.GmapResponse;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+import data.model.gmaps.GmapResponse;
+import data.model.gmaps.Result;
+import data.GMapApiClient;
+import data.GMapApiInterface;
 
 public class LoginPresenterImpl  implements LoginContract.Presenter {
 
@@ -29,6 +34,7 @@ public class LoginPresenterImpl  implements LoginContract.Presenter {
     private LoginContract.view mLoginView;
     private CallbackManager callbackManager;
     private SessionManagementUtil session;
+    data.model.Location mLocation = null;
     Context mContext;
     public LoginPresenterImpl(LoginContract.view view, Context context)
     {
@@ -51,6 +57,7 @@ public class LoginPresenterImpl  implements LoginContract.Presenter {
                 Log.i("NEW_Latitude",""+myLocation.getLatitude());
                 Log.i("NEW_Longitude",""+myLocation.getLongitude());
                 myLocationListener.stopUsingGPS();
+                getCurrentLocation(myLocation.getLatitude(),myLocation.getLongitude());
             }
 
             @Override
@@ -100,6 +107,50 @@ public class LoginPresenterImpl  implements LoginContract.Presenter {
                                 Log.e(TAG, t.toString());
                             }
                         });
+    }
+
+    @Override
+    public void getCurrentLocation(final double pLatitude, final double pLongitude) {
+        GMapApiInterface apiService =
+                GMapApiClient.getClientForGMAP().create(GMapApiInterface.class);
+
+        Call<GmapResponse> call = null;
+        String myLatLong = String.valueOf(pLatitude)+","+String.valueOf(pLongitude);
+        call = apiService.getLocationForLatLong(myLatLong,GMapApiClient.GMAP_KEY);
+        mLocation = new data.model.Location();
+        call.enqueue(new Callback<GmapResponse>() {
+            @Override
+            public void onResponse(Call<GmapResponse> call, Response<GmapResponse> response) {
+                GmapResponse myGmapResponse = response.body();
+                if (myGmapResponse != null)
+                {
+                    String myCurrentAddress = myGmapResponse.getResults().get(0).getFormattedAddress();
+                    String [] myAddressComponents = myCurrentAddress.split(",");
+                    int myLastIndex= myAddressComponents.length;
+                    mLocation.setLatitude(pLatitude);
+                    mLocation.setLongitude(pLongitude);
+                    mLocation.setCity(myAddressComponents[myLastIndex - 3]);
+                    mLocation.setAddressLine1(myAddressComponents[0]);
+                    mLocation.setAddressLine2(myAddressComponents[1]);
+                    String myStateZip = myAddressComponents[myLastIndex - 2];
+                    String myZip = myStateZip.substring(myStateZip.lastIndexOf(" "));
+                    String myState = myStateZip.replaceAll(myZip,"");
+                    mLocation.setState(myState.trim());
+                    mLocation.setPinCode(myZip.trim());
+                    SessionManagementUtil.updateLocation(mLocation);
+
+                }
+                else
+                {
+                    Log.e("ERROR GETTING LOCATION","no values found for current address");
+                }
+            }
+
+            @Override
+            public void onFailure(Call<GmapResponse> call, Throwable t) {
+                Log.e("ERROR GETTING LOCATION", t.toString());
+            }
+        });
     }
 
     @Override

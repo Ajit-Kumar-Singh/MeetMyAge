@@ -30,4 +30,5 @@ public interface ApiInterface {
     @POST("/profiles/validateFacebookToken")
     Call<Profile> validateAndFetchFBProfile(@Body FBRequest fbToken);
 
+
 }

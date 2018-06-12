@@ -4,7 +4,7 @@ import android.content.Intent;
 
 import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
-
+import data.model.Location;
 import data.model.Profile;
 
 public interface LoginContract {
@@ -21,6 +21,7 @@ public interface LoginContract {
         void fbLoginButtonClicked(LoginButton loginButton);
         void saveProfileToServer(LoginResult loginResult);
         void saveProfileToSessionPreference(Profile profile);
+        void getCurrentLocation(double pLatitude, double pLongitude);
         boolean isLoggedIn();
         void onActivityResult(int requestCode, int resultCode, Intent data);
     }
