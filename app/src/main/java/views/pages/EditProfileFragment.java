@@ -85,7 +85,7 @@ public class EditProfileFragment extends Fragment {
             public void onResponse(Call<Profile> call, Response<Profile> response) {
                 Profile responseProfile = response.body();
                 SessionManagementUtil.updateProfile(
-                        responseProfile.getProfileName(),"",responseProfile.getProfileStory(),responseProfile.getProfileWork(),new Location());
+                        responseProfile.getProfileName(),"",responseProfile.getProfileStory(),responseProfile.getProfileWork());
                 FragmentTransaction trans = getFragmentManager()
                         .beginTransaction();
                 trans.replace(R.id.root_frame, new ProfileFragment());

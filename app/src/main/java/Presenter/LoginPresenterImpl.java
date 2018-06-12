@@ -13,9 +13,11 @@ import com.facebook.FacebookException;
 import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
 
+import Presenter.location.LocationListenerImpl;
 import data.ApiClient;
 import data.ApiInterface;
-import Presenter.location.LocationListenerImpl;
+import data.GMapApiClient;
+import data.GMapApiInterface;
 import data.SessionManagementUtil;
 import data.model.FBRequest;
 import data.model.Profile;
@@ -23,10 +25,6 @@ import data.model.gmaps.GmapResponse;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-import data.model.gmaps.GmapResponse;
-import data.model.gmaps.Result;
-import data.GMapApiClient;
-import data.GMapApiInterface;
 
 public class LoginPresenterImpl  implements LoginContract.Presenter {
 
@@ -52,12 +50,6 @@ public class LoginPresenterImpl  implements LoginContract.Presenter {
             public void onSuccess(LoginResult loginResult) {
                 loginButton.setVisibility(View.INVISIBLE);
                 saveProfileToServer(loginResult);
-                LocationListenerImpl myLocationListener = new LocationListenerImpl(mContext);
-                Location myLocation = myLocationListener.getLocation();
-                Log.i("NEW_Latitude",""+myLocation.getLatitude());
-                Log.i("NEW_Longitude",""+myLocation.getLongitude());
-                myLocationListener.stopUsingGPS();
-                getCurrentLocation(myLocation.getLatitude(),myLocation.getLongitude());
             }
 
             @Override
@@ -79,11 +71,9 @@ public class LoginPresenterImpl  implements LoginContract.Presenter {
     public void saveProfileToServer(LoginResult loginResult) {
         ApiInterface apiService =
                                 ApiClient.getClient().create(ApiInterface.class);
-
                         Call<Profile> call = null;
                         mLoginView.showProgressBar();
                         call = apiService.validateAndFetchFBProfile(new FBRequest(loginResult.getAccessToken().getToken()));
-
                         call.enqueue(new Callback<Profile>() {
                             @Override
                             public void onResponse(Call<Profile> call, Response<Profile> response) {
@@ -91,7 +81,12 @@ public class LoginPresenterImpl  implements LoginContract.Presenter {
                                 if (profile != null)
                                 {
                                     saveProfileToSessionPreference(profile);
-                                    mLoginView.onSuccess();
+                                    LocationListenerImpl myLocationListener = new LocationListenerImpl(mContext);
+                                    Location myLocation = myLocationListener.getLocation();
+                                    Log.i("NEW_Latitude",""+myLocation.getLatitude());
+                                    Log.i("NEW_Longitude",""+myLocation.getLongitude());
+                                    myLocationListener.stopUsingGPS();
+                                    getCurrentLocation(myLocation.getLatitude(),myLocation.getLongitude());
                                 }
                                 else
                                 {
@@ -104,10 +99,12 @@ public class LoginPresenterImpl  implements LoginContract.Presenter {
                             public void onFailure(Call<Profile> call, Throwable t) {
                                 // Log error here since request failed
                                 mLoginView.onFailure("Server is Down. Please try again");
+                                mLoginView.hideProgressBar();
                                 Log.e(TAG, t.toString());
                             }
                         });
     }
+
 
     @Override
     public void getCurrentLocation(final double pLatitude, final double pLongitude) {
@@ -138,16 +135,18 @@ public class LoginPresenterImpl  implements LoginContract.Presenter {
                     mLocation.setState(myState.trim());
                     mLocation.setPinCode(myZip.trim());
                     SessionManagementUtil.updateLocation(mLocation);
-
+                    updateProfileWithLocation();
                 }
                 else
                 {
+                    mLoginView.hideProgressBar();
                     Log.e("ERROR GETTING LOCATION","no values found for current address");
                 }
             }
 
             @Override
             public void onFailure(Call<GmapResponse> call, Throwable t) {
+                mLoginView.hideProgressBar();
                 Log.e("ERROR GETTING LOCATION", t.toString());
             }
         });
@@ -155,9 +154,34 @@ public class LoginPresenterImpl  implements LoginContract.Presenter {
 
     @Override
     public void saveProfileToSessionPreference(Profile profile) {
-        SessionManagementUtil.createLoginSession(profile.getProfileId(),profile.getProfileName(),"",profile.getProfileStory(),profile.getProfileWork(),profile.getLocation());
-        mLoginView.hideProgressBar();
+        SessionManagementUtil.createLoginSession(profile.getProfileId(),profile.getProfileName(),"",profile.getProfileStory(),profile.getProfileWork());
+    }
 
+    @Override
+    public void updateProfileWithLocation() {
+        //Update Data to server
+        ApiInterface apiService =
+                ApiClient.getClient().create(ApiInterface.class);
+
+        Call<Profile> call = null;
+        Profile profile = SessionManagementUtil.getUserData();
+        call = apiService.updateProfile(SessionManagementUtil.getUserData().getProfileId(),
+                new Profile(profile.getProfileId(),profile.getProfileName(),profile.getProfileStory(),profile.getProfileWork(),profile.getLocation()));
+
+        call.enqueue(new Callback<Profile>() {
+            @Override
+            public void onResponse(Call<Profile> call, Response<Profile> response) {
+                mLoginView.hideProgressBar();
+                mLoginView.onSuccess();
+            }
+
+            @Override
+            public void onFailure(Call<Profile> call, Throwable t) {
+                // Log error here since request failed
+                mLoginView.hideProgressBar();
+                Log.e(TAG, t.toString());
+            }
+        });
     }
 
     @Override

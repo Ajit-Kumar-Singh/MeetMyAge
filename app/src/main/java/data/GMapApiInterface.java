@@ -1,11 +1,7 @@
 package data;
 
-import java.util.List;
-
 import data.model.gmaps.GmapResponse;
-import data.model.gmaps.Result;
 import retrofit2.Call;
-import retrofit2.http.Body;
 import retrofit2.http.GET;
 import retrofit2.http.Query;
 

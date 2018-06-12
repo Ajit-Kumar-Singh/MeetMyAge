@@ -19,5 +19,4 @@ public class GmapResponse {
     @Expose
     private List<Result> results = null;
 
-
 }

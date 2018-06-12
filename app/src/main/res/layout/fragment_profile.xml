@@ -37,6 +37,14 @@
             android:textColor="#000000"
             android:textSize="30sp"
             android:textStyle="bold" />
+        <TextView
+            android:id="@+id/city"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:gravity="center_horizontal"
+            android:textColor="#000000"
+            android:textSize="21sp" />
 
         <TextView
             android:id="@+id/profileWork"

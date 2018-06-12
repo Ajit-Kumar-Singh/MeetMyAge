@@ -39,6 +39,7 @@ public class ProfileFragment extends Fragment {
     @BindView(R.id.userName) TextView mProfileName;
     @BindView(R.id.profileWork) TextView mProfileWork;
     @BindView(R.id.profileStory) TextView mProfileStory;
+    @BindView(R.id.city) TextView mProfileCity;
     @BindView(R.id.fab) FloatingActionButton mFab;
     @BindView(R.id.layoutPreview) LinearLayout mLayoutPreview;
     @BindView(R.id.layoutEdit) LinearLayout mLayoutEdit;
@@ -67,6 +68,7 @@ public class ProfileFragment extends Fragment {
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         showPreviewPage();
+
         view.setFocusableInTouchMode(true);
         view.requestFocus();
         view.setOnKeyListener(new View.OnKeyListener() {
@@ -83,7 +85,7 @@ public class ProfileFragment extends Fragment {
                 return false;
             }
         });
-        }
+    }
 
 
     private void showPreviewPage()
@@ -97,6 +99,7 @@ public class ProfileFragment extends Fragment {
             mProfileName.setText(savedProfile.getProfileName());
             mProfileStory.setText(savedProfile.getProfileStory());
             mProfileWork.setText(savedProfile.getProfileWork());
+            mProfileCity.setText(savedProfile.getLocation().getCity());
             isPreview = false;
             mFab.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -128,6 +131,7 @@ public class ProfileFragment extends Fragment {
             });
         }
     }
+
     private void updateDataToServer()
     {
         //Update Data to server
@@ -143,7 +147,7 @@ public class ProfileFragment extends Fragment {
             public void onResponse(Call<Profile> call, Response<Profile> response) {
                 Profile responseProfile = response.body();
                 SessionManagementUtil.updateProfile(
-                        responseProfile.getProfileName(),"",responseProfile.getProfileStory(),responseProfile.getProfileWork(),new Location());
+                        responseProfile.getProfileName(),"",responseProfile.getProfileStory(),responseProfile.getProfileWork());
                 showPreviewPage();
             }
 

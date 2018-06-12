@@ -57,28 +57,22 @@ public class SessionManagementUtil {
     /**
      * Create login session
      * */
-    public static void createLoginSession(int id, String name, String email, String work, String about, Location loc){
+    public static void createLoginSession(int id, String name, String email, String work, String about){
         // Storing login value as TRUE
-        editor = pref.edit();
         editor.putBoolean(IS_LOGIN, true);
-
         editor.putInt(KEY_ID,id);
         editor.putString(KEY_WORK,work);
         editor.putString(KEY_ABOUT,about);
         // Storing name in pref
         editor.putString(KEY_NAME, name);
-
         // Storing email in pref
         editor.putString(KEY_EMAIL, email);
-
-        String json = gson.toJson(loc); // myObject - instance of MyObject
-        editor.putString(KEY_LOCATION, json);
         editor.commit();
     }
 
-    public static void updateProfile(String name, String email, String work, String about,Location loc){
+    public static void updateProfile(String name, String email, String work, String about){
         // Storing login value as TRUE
-        editor= pref.edit();
+
         editor.putBoolean(IS_LOGIN, true);
         editor.putString(KEY_WORK,work);
         editor.putString(KEY_ABOUT,about);
@@ -87,9 +81,6 @@ public class SessionManagementUtil {
 
         // Storing email in pref
         editor.putString(KEY_EMAIL, email);
-        Log.i("hello ",gson.toJson(loc));
-
-        editor.putString(KEY_LOCATION,gson.toJson(loc));
 
         // commit changes
         editor.commit();
@@ -97,14 +88,20 @@ public class SessionManagementUtil {
 
     public static void updateLocation(Location loc)
     {
-        editor = pref.edit();
         editor.putString(KEY_LOCATION,gson.toJson(loc));
         Log.d("LOCATION", gson.toJson(loc));
         editor.commit();
     }
+
+    public static Location getLocation()
+    {
+        Location loc = gson.fromJson(pref.getString(KEY_LOCATION,""), Location.class);
+        return loc;
+    }
+
      public static Profile getUserData()
      {
-         return  new Profile(pref.getInt(KEY_ID,0), pref.getString(KEY_NAME,""), pref.getString(KEY_ABOUT,""),pref.getString(KEY_WORK,""), new Location());
+         return  new Profile(pref.getInt(KEY_ID,0), pref.getString(KEY_NAME,""), pref.getString(KEY_ABOUT,""),pref.getString(KEY_WORK,""), getLocation());
      }
 
 
