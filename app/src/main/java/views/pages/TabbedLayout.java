@@ -1,11 +1,12 @@
 package views.pages;
 
+import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.net.Uri;
-import android.support.design.widget.TabLayout;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v4.view.ViewPager;
 import android.os.Bundle;
+import android.support.design.widget.TabLayout;
+import android.support.v4.view.ViewPager;
+import android.support.v7.app.AppCompatActivity;
 
 import com.meetmyage.com.meetmyageapp.R;
 
@@ -58,6 +59,10 @@ ProfileFragmentHolder.OnFragmentInteractionListener
     @Override
     public void onFragmentInteraction(Uri uri) {
         // Empty for now USed for interaction
+    }
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
     }
 
     @Override

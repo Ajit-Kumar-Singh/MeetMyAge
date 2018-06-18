@@ -65,6 +65,7 @@ public class ProfileFragment extends Fragment {
         ButterKnife.bind(this,view);
         return view;
     }
+
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         showPreviewPage();
