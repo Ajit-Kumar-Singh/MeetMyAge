@@ -13,6 +13,8 @@ import com.facebook.FacebookException;
 import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
 
+import java.util.List;
+
 import Presenter.location.LocationListenerImpl;
 import data.ApiClient;
 import data.ApiInterface;
@@ -50,6 +52,7 @@ public class LoginPresenterImpl  implements LoginContract.Presenter {
             public void onSuccess(LoginResult loginResult) {
                 loginButton.setVisibility(View.INVISIBLE);
                 saveProfileToServer(loginResult);
+
             }
 
             @Override
@@ -193,4 +196,6 @@ public class LoginPresenterImpl  implements LoginContract.Presenter {
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         callbackManager.onActivityResult(requestCode, resultCode, data);
     }
+
+
 }

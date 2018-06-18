@@ -13,7 +13,7 @@ import com.meetmyage.com.meetmyageapp.R;
 public class TabbedLayout extends AppCompatActivity implements ProfileFragment.OnFragmentInteractionListener, EditProfileFragment.OnFragmentInteractionListener,
 EventsDetailsFragment.OnFragmentInteractionListener,
 CreateGroupFragment.OnFragmentInteractionListener,
-GroupDetailsFragment.OnFragmentInteractionListener,
+RecommendedGroupsFragment.OnFragmentInteractionListener,
 ProfileFragmentHolder.OnFragmentInteractionListener
 {
     private SectionsPagerAdapter mSectionsPagerAdapter;

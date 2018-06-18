@@ -28,20 +28,20 @@ public class LoginActivity extends AppCompatActivity implements LoginContract.vi
                 101 );
         mLoginPresenter = new LoginPresenterImpl(this,getApplicationContext());
         boolean loggedIn = mLoginPresenter.isLoggedIn();
-        if (loggedIn)
-        {
-            //Open the tabbed layout
-            onSuccess();
-        }
-        else
-        {
+//        if (loggedIn)
+//        {
+//            //Open the tabbed layout
+//            onSuccess();
+//        }
+//        else
+//        {
             setContentView(R.layout.activity_login);
             mProgressDialog = findViewById(R.id.login_progress);
             mProgressDialog.setVisibility(View.GONE);
             final LoginButton loginButton = (LoginButton) findViewById(R.id.facbookSignin);
             mLoginPresenter.fbLoginButtonClicked(loginButton);
 
-        }
+//        }
     }
 
     @Override
