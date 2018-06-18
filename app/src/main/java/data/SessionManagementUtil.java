@@ -7,7 +7,13 @@ import android.util.Log;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.reflect.TypeToken;
 
+import java.lang.reflect.Type;
+import java.util.ArrayList;
+import java.util.List;
+
+import data.model.Group;
 import data.model.Location;
 import data.model.Profile;
 
@@ -43,6 +49,8 @@ public class SessionManagementUtil {
 
     public  static final String KEY_LOCATION = "location";
 
+    public  static final String KEY_RECOMMENDED_GROUPS = "recommended_groups";
+
     public static Gson gson = new GsonBuilder().serializeNulls().create();
     // Constructor
     public SessionManagementUtil(Context context){
@@ -52,6 +60,12 @@ public class SessionManagementUtil {
             pref = _context.getSharedPreferences(PREF_NAME, PRIVATE_MODE);
             editor = pref.edit();
         }
+    }
+
+    public static void saveRecommendedGroups(List<Group> pGroups) {
+        editor.putString(KEY_RECOMMENDED_GROUPS,gson.toJson(pGroups));
+        Log.d("KEY_RECOMMENDED_GROUPS", gson.toJson(pGroups));
+        editor.commit();
     }
 
     /**
@@ -104,6 +118,11 @@ public class SessionManagementUtil {
          return  new Profile(pref.getInt(KEY_ID,0), pref.getString(KEY_NAME,""), pref.getString(KEY_ABOUT,""),pref.getString(KEY_WORK,""), getLocation());
      }
 
+    public static List<Group> getRecommendedGroups() {
+        Type fooType = new TypeToken<List<Group>>() {}.getType();
+        List<Group>loc = gson.fromJson(pref.getString(KEY_RECOMMENDED_GROUPS,""), fooType);
+        return loc;
+    }
 
     public void clearAllData(){
         // Clearing all data from Shared Preferences
