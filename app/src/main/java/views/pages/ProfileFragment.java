@@ -56,8 +56,8 @@ import static com.facebook.FacebookSdk.getApplicationContext;
 
 // Managing the Profile in this class
 public class ProfileFragment extends Fragment {
-    private static Bitmap mBitmap = null;
 
+    private static Bitmap mBitmap = null;
     private OnFragmentInteractionListener mListener;
     private String TAG = ProfileFragment.class.getSimpleName();
     private boolean isPreview = true;
@@ -146,7 +146,7 @@ public class ProfileFragment extends Fragment {
                 }
             });
 
-            if (SessionManagementUtil.getImagePath() == null)
+            if (mBitmap == null)
             {
                 fetchProfilePicFromServerAndSaveToBitmap();
             }
@@ -195,8 +195,16 @@ public class ProfileFragment extends Fragment {
             @Override
             public void onResponse(Call<ProfilePhotoResponse> call, Response<ProfilePhotoResponse> response) {
                 ProfilePhotoResponse responseProfile = response.body();
-                mBitmap = CommonUtil.convertStringToBitmap(responseProfile.getData());
-                mImageView.setImageBitmap(mBitmap);
+                String data = responseProfile.getData();
+                if (data.isEmpty())
+                {
+                    mImageView.setBackgroundResource(R.drawable.man);
+                }
+                else
+                {
+                    mBitmap = CommonUtil.convertStringToBitmap(responseProfile.getData());
+                    mImageView.setImageBitmap(mBitmap);
+                }
                 mProgressDialog.hide();
             }
 
@@ -204,6 +212,7 @@ public class ProfileFragment extends Fragment {
             public void onFailure(Call<ProfilePhotoResponse> call, Throwable t) {
                 // Log error here since request failed
                 mProgressDialog.hide();
+                mImageView.setBackgroundResource(R.drawable.man);
                 Log.e(TAG, t.toString());
             }
         });
@@ -236,13 +245,6 @@ public class ProfileFragment extends Fragment {
         });
     }
 
-
-    // TODO: Rename method, update argument and hook method into UI event
-    public void onButtonPressed(Uri uri) {
-        if (mListener != null) {
-            mListener.onFragmentInteraction(uri);
-        }
-    }
 
     private boolean permissions(List<String> listPermissionsNeeded) {
 
@@ -306,8 +308,8 @@ public class ProfileFragment extends Fragment {
                 int columnIndex = c.getColumnIndex(filePath[0]);
                 mImagePath = c.getString(columnIndex);
                 c.close();
-                }
             }
+        }
         convertPathToBitmap();
         mImageView.setImageBitmap(mBitmap);
         saveImageProfilePicToServer();
@@ -348,6 +350,14 @@ public class ProfileFragment extends Fragment {
         });
 
     }
+
+    // TODO: Rename method, update argument and hook method into UI event
+    public void onButtonPressed(Uri uri) {
+        if (mListener != null) {
+            mListener.onFragmentInteraction(uri);
+        }
+    }
+
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
