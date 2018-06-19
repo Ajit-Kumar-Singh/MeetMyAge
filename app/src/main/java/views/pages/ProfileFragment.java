@@ -76,6 +76,7 @@ public class ProfileFragment extends Fragment {
     @BindView(R.id.editprofileStory) EditText mEditProfileStrory;
     @BindView (R.id.editprofileWork) EditText mEditProfileWork;
     @BindView(R.id.profileImage) ImageView mImageView;
+    @BindView(R.id.addPhoto) FloatingActionButton mAddPhoto;
 
     private ProgressDialog mProgressDialog;
 
@@ -117,7 +118,7 @@ public class ProfileFragment extends Fragment {
             }
         });
 
-        mImageView.setOnClickListener(new View.OnClickListener() {
+        mAddPhoto.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 openImagePicker();
