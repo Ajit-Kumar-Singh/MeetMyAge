@@ -18,7 +18,6 @@ public class Group {
     @Expose
     private Location location;
 
-
     public Integer getGroupId() {
         return groupId;
     }

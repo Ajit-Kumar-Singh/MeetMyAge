@@ -81,28 +81,28 @@
                     android:text="About Group" />
 
                 <EditText
-                    android:id="@+id/editText2"
+                    android:id="@+id/groupName"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:ems="10"
                     android:inputType="textPersonName"
-                    android:hint="Write Something about the Group"
+                    android:hint="Give a great name to group"
                     android:layout_marginBottom="20sp"/>
 
                 <TextView
                     android:id="@+id/textView2"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Interests"
+                    android:text="Group Story"
                     />
 
                 <EditText
-                    android:id="@+id/editText3"
+                    android:id="@+id/groupStory"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:ems="10"
                     android:inputType="textPersonName"
-                    android:hint="Add Some Interests" />
+                    android:hint="Group Story" />
 
                 <ImageButton
                     android:id="@+id/imageButton"
@@ -117,7 +117,7 @@
                     />
 
                 <Button
-                    android:id="@+id/button2"
+                    android:id="@+id/saveGroup"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="Save Group"

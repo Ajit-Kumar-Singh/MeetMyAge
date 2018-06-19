@@ -20,10 +20,14 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.content.FileProvider;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import com.meetmyage.com.meetmyageapp.BuildConfig;
 import com.meetmyage.com.meetmyageapp.R;
@@ -36,6 +40,14 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import data.ApiClient;
+import data.ApiInterface;
+import data.SessionManagementUtil;
+import data.model.GroupRequest;
+import data.model.GroupResponse;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 import static android.app.Activity.RESULT_OK;
 import static com.facebook.FacebookSdk.getApplicationContext;
@@ -54,10 +66,22 @@ public class CreateGroupFragment extends Fragment {
     @BindView(R.id.groupImage4)
     ImageView mGrpImageFourth;
 
+    @BindView(R.id.groupName)
+    EditText mGrpName;
+
+    @BindView(R.id.groupStory)
+    EditText mGrpStory;
+
+    @BindView(R.id.saveGroup)
+    Button mSaveGroup;
+
     private Uri mCommonUri;
     private int mSelectedIndex;
     private OnFragmentInteractionListener mListener;
+
+    private static final String TAG = CreateGroupFragment.class.getSimpleName();
     public static final int REQUEST_ID_MULTIPLE_PERMISSIONS = 1;  // Declare this integer globally
+
     public CreateGroupFragment() {
         // Required empty public constructor
     }
@@ -98,15 +122,22 @@ public class CreateGroupFragment extends Fragment {
         mGrpImageFourth.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
                 openImagePicker(3);
+            }
+        });
+
+        mSaveGroup.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                saveGroupDataToServer();
             }
         });
         return view;
     }
 
-    public static List<String> checkAndRequestPermissions(Context context) {
-
+    // Logic to Check permissions. Should be moved to common util
+    public static List<String> checkAndRequestPermissions(Context context)
+    {
         int camera = ContextCompat.checkSelfPermission(context, android.Manifest.permission.CAMERA);
         int readStorage = ContextCompat.checkSelfPermission(context, Manifest.permission.READ_EXTERNAL_STORAGE);
         int writeStorage = ContextCompat.checkSelfPermission(context, android.Manifest.permission.WRITE_EXTERNAL_STORAGE);
@@ -233,6 +264,32 @@ public class CreateGroupFragment extends Fragment {
         }
     }
 
+    void saveGroupDataToServer()
+    {
+        //Update Data to server
+        ApiInterface apiService =
+                ApiClient.getClient().create(ApiInterface.class);
+
+        Call<GroupResponse> call = null;
+        call = apiService.createGroup(SessionManagementUtil.getUserData().getProfileId(),
+                new GroupRequest(mGrpName.getText().toString(),mGrpStory.getText().toString(),SessionManagementUtil.getLocation()));
+
+        call.enqueue(new Callback<GroupResponse>() {
+            @Override
+            public void onResponse(Call<GroupResponse> call, Response<GroupResponse> response) {
+                Toast.makeText(getActivity(), "This is my Toast message!",
+                        Toast.LENGTH_LONG).show();
+            }
+
+            @Override
+            public void onFailure(Call<GroupResponse> call, Throwable t) {
+                // Log error here since request failed
+                Toast.makeText(getActivity(), "This is my failure message!",
+                        Toast.LENGTH_LONG).show();
+                Log.e(TAG, t.toString());
+            }
+        });
+    }
     // TODO: Rename method, update argument and hook method into UI event
     public void onButtonPressed(Uri uri) {
         if (mListener != null) {

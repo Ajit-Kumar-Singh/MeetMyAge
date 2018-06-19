@@ -5,6 +5,8 @@ import java.util.List;
 
 import data.model.FBRequest;
 import data.model.Group;
+import data.model.GroupRequest;
+import data.model.GroupResponse;
 import data.model.Profile;
 import data.model.ProfilePost;
 import retrofit2.Call;
@@ -29,6 +31,10 @@ public interface ApiInterface {
 
     @POST("/profiles/validateFacebookToken")
     Call<Profile> validateAndFetchFBProfile(@Body FBRequest fbToken);
+
+    // For creating a group
+    @POST("profiles/{id}/myGroups")
+    Call<GroupResponse> createGroup(@Path("id") int id , @Body GroupRequest groupRequest);
 
 
 }
