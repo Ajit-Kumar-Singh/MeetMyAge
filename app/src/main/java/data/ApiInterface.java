@@ -8,6 +8,8 @@ import data.model.Group;
 import data.model.GroupRequest;
 import data.model.GroupResponse;
 import data.model.Profile;
+import data.model.ProfilePhotoRequest;
+import data.model.ProfilePhotoResponse;
 import data.model.ProfilePost;
 import data.model.gmaps.GroupWithSubscription;
 import retrofit2.Call;
@@ -40,5 +42,10 @@ public interface ApiInterface {
     @POST("profiles/{id}/myGroups")
     Call<GroupResponse> createGroup(@Path("id") int id , @Body GroupRequest groupRequest);
 
+    @POST("profiles/{id}/uploadProfilePhoto")
+    Call<Void> uploadProfilePhoto(@Path("id") int id, @Body ProfilePhotoRequest photoRequest);
+
+    @GET("profiles/{id}/profilePhoto")
+    Call<ProfilePhotoResponse> fetchProfileData(@Path("id") int id);
 
 }

@@ -1,11 +1,9 @@
 package views.pages;
 
-import android.Manifest;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -18,7 +16,6 @@ import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
-import android.support.v4.content.ContextCompat;
 import android.support.v4.content.FileProvider;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -33,11 +30,9 @@ import com.meetmyage.com.meetmyageapp.BuildConfig;
 import com.meetmyage.com.meetmyageapp.R;
 
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.InputStream;
-import java.util.ArrayList;
 import java.util.List;
 
+import Util.CommonUtil;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import data.ApiClient;
@@ -54,268 +49,178 @@ import static com.facebook.FacebookSdk.getApplicationContext;
 
 public class CreateGroupFragment extends Fragment {
 
-    @BindView(R.id.groupImage1)
-    ImageView mGrpImageFirst;
+	@BindView(R.id.groupImage)
+	ImageView mGrpImage;
 
-    @BindView(R.id.groupImage2)
-    ImageView mGrpImageSecond;
+	@BindView(R.id.groupName)
+	EditText mGrpName;
 
-    @BindView(R.id.groupImage3)
-    ImageView mGrpImageThird;
+	@BindView(R.id.groupStory)
+	EditText mGrpStory;
 
-    @BindView(R.id.groupImage4)
-    ImageView mGrpImageFourth;
+	@BindView(R.id.saveGroup)
+	Button mSaveGroup;
 
-    @BindView(R.id.groupName)
-    EditText mGrpName;
+	private Uri mCommonUri;
+	private OnFragmentInteractionListener mListener;
 
-    @BindView(R.id.groupStory)
-    EditText mGrpStory;
+	private static final String TAG = CreateGroupFragment.class.getSimpleName();
 
-    @BindView(R.id.saveGroup)
-    Button mSaveGroup;
+	public CreateGroupFragment() {
+		// Required empty public constructor
+	}
 
-    private Uri mCommonUri;
-    private int mSelectedIndex;
-    private OnFragmentInteractionListener mListener;
+	@Override
+	public void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+	}
 
-    private static final String TAG = CreateGroupFragment.class.getSimpleName();
-    public static final int REQUEST_ID_MULTIPLE_PERMISSIONS = 1;  // Declare this integer globally
+	@Override
+	public View onCreateView(LayoutInflater inflater, ViewGroup container,
+							 Bundle savedInstanceState) {
+		// Inflate the layout for this fragment
+		View view =  inflater.inflate(R.layout.fragment_create_group, container, false);
+		ButterKnife.bind(this,view);
 
-    public CreateGroupFragment() {
-        // Required empty public constructor
-    }
+		mGrpImage.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View view) {
+				openImagePicker();
+			}
+		});
 
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-    }
+		mSaveGroup.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View view) {
+				saveGroupDataToServer();
+			}
+		});
+		return view;
+	}
 
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        View view =  inflater.inflate(R.layout.fragment_create_group, container, false);
-        ButterKnife.bind(this,view);
+	private boolean permissions(List<String> listPermissionsNeeded) {
 
-        mGrpImageFirst.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                openImagePicker(0);
-            }
-        });
+		if (!listPermissionsNeeded.isEmpty()) {
+			ActivityCompat.requestPermissions(getActivity(), listPermissionsNeeded.toArray
+					(new String[listPermissionsNeeded.size()]), CommonUtil.REQUEST_ID_MULTIPLE_PERMISSIONS);
+			return false;
+		}
+		return true;
+	}
 
-        mGrpImageSecond.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                openImagePicker(1);
-            }
-        });
+	public void openImagePicker()
+	{
+		List<String> permissionList = CommonUtil.checkAndRequestPermissions(getApplicationContext());
+		final Fragment frag = this;
+		if (permissions(permissionList)) {
+			final CharSequence[] options = { "Take Photo", "Choose from Gallery","Cancel" };
+			AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+			builder.setTitle("Add Photo!");
+			builder.setItems(options, new DialogInterface.OnClickListener() {
+				@Override
+				public void onClick(DialogInterface dialog, int item) {
+					if (options[item].equals("Take Photo"))
+					{
+						if (Build.VERSION.SDK_INT < Build.VERSION_CODES.N) {
+							// intent.putExtra(MediaStore.EXTRA_OUTPUT, getPhotoFileUri());
+						} else {
+							File f = new File(Environment.getExternalStorageDirectory(), "GROUP"+System.currentTimeMillis()+".jpg");
+							Uri uri = FileProvider.getUriForFile(getActivity(), BuildConfig.APPLICATION_ID + ".provider",f);
+							mCommonUri = uri;
+						}
+						Intent cameraIntent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
+						cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, mCommonUri);
+						startActivityForResult(cameraIntent, 1); // REQUEST_IMAGE_CAPTURE = 12345
+					}
+					else if (options[item].equals("Choose from Gallery"))
+					{
+						Intent intent = new   Intent(Intent.ACTION_PICK,android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+						startActivityForResult(intent, 2);
+					}
 
-        mGrpImageThird.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                openImagePicker(2);
-            }
-        });
+					else if (options[item].equals("Cancel")) {
+						dialog.dismiss();
+					}
+				}
+			});
+			builder.show();
+		}
+	}
 
-        mGrpImageFourth.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                openImagePicker(3);
-            }
-        });
+	@Override
+	public void onActivityResult(int requestCode, int resultCode, Intent data) {
+		Drawable drawable = null;
+		if (resultCode == RESULT_OK) {
+			if (requestCode == 1) {
+				mGrpImage.setImageURI(mCommonUri);
+			} else if (requestCode == 2) {
+				Uri selectedImage = data.getData();
+				String[] filePath = {MediaStore.Images.Media.DATA};
+				Cursor c = getApplicationContext().getContentResolver().query(selectedImage, filePath, null, null, null);
+				c.moveToFirst();
+				int columnIndex = c.getColumnIndex(filePath[0]);
+				String picturePath = c.getString(columnIndex);
+				c.close();
+				Bitmap thumbnail = (BitmapFactory.decodeFile(picturePath));
+				drawable = new BitmapDrawable(thumbnail);
+				mGrpImage.setImageDrawable(drawable);
+			}
+		}
+	}
 
-        mSaveGroup.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                saveGroupDataToServer();
-            }
-        });
-        return view;
-    }
+	void saveGroupDataToServer()
+	{
+		//Update Data to server
+		ApiInterface apiService =
+				ApiClient.getClient().create(ApiInterface.class);
 
-    // Logic to Check permissions. Should be moved to common util
-    public static List<String> checkAndRequestPermissions(Context context)
-    {
-        int camera = ContextCompat.checkSelfPermission(context, android.Manifest.permission.CAMERA);
-        int readStorage = ContextCompat.checkSelfPermission(context, Manifest.permission.READ_EXTERNAL_STORAGE);
-        int writeStorage = ContextCompat.checkSelfPermission(context, android.Manifest.permission.WRITE_EXTERNAL_STORAGE);
-        int fineLoc = ContextCompat.checkSelfPermission(context, android.Manifest.permission.ACCESS_FINE_LOCATION);
-        int coarseLoc = ContextCompat.checkSelfPermission(context, android.Manifest.permission.ACCESS_COARSE_LOCATION);
-        List<String> listPermissionsNeeded = new ArrayList<>();
+		Call<GroupResponse> call = null;
+		call = apiService.createGroup(SessionManagementUtil.getUserData().getProfileId(),
+				new GroupRequest(mGrpName.getText().toString(),mGrpStory.getText().toString(),SessionManagementUtil.getLocation()));
 
-        if (camera != PackageManager.PERMISSION_GRANTED) {
-            listPermissionsNeeded.add(android.Manifest.permission.CAMERA);
-        }
-        if (readStorage != PackageManager.PERMISSION_GRANTED) {
-            listPermissionsNeeded.add(android.Manifest.permission.READ_EXTERNAL_STORAGE);
-        }
-        if (writeStorage != PackageManager.PERMISSION_GRANTED) {
-            listPermissionsNeeded.add(android.Manifest.permission.WRITE_EXTERNAL_STORAGE);
-        }
-        if (fineLoc != PackageManager.PERMISSION_GRANTED) {
-            listPermissionsNeeded.add(android.Manifest.permission.ACCESS_FINE_LOCATION);
-        }
-        if (coarseLoc != PackageManager.PERMISSION_GRANTED) {
-            listPermissionsNeeded.add(android.Manifest.permission.ACCESS_COARSE_LOCATION);
-        }
+		call.enqueue(new Callback<GroupResponse>() {
+			@Override
+			public void onResponse(Call<GroupResponse> call, Response<GroupResponse> response) {
+				Toast.makeText(getActivity(), "This is my Toast message!",
+						Toast.LENGTH_LONG).show();
+			}
 
-        return listPermissionsNeeded;
-    }
+			@Override
+			public void onFailure(Call<GroupResponse> call, Throwable t) {
+				// Log error here since request failed
+				Toast.makeText(getActivity(), "This is my failure message!",
+						Toast.LENGTH_LONG).show();
+				Log.e(TAG, t.toString());
+			}
+		});
+	}
 
-    private boolean permissions(List<String> listPermissionsNeeded) {
+	// TODO: Rename method, update argument and hook method into UI event
+	public void onButtonPressed(Uri uri) {
+		if (mListener != null) {
+			mListener.onFragmentInteraction(uri);
+		}
+	}
 
-        if (!listPermissionsNeeded.isEmpty()) {
-            ActivityCompat.requestPermissions(getActivity(), listPermissionsNeeded.toArray
-                    (new String[listPermissionsNeeded.size()]), REQUEST_ID_MULTIPLE_PERMISSIONS);
-            return false;
-        }
-        return true;
-    }
+	@Override
+	public void onAttach(Context context) {
+		super.onAttach(context);
+		if (context instanceof OnFragmentInteractionListener) {
+			mListener = (OnFragmentInteractionListener) context;
+		} else {
+			throw new RuntimeException(context.toString()
+					+ " must implement OnFragmentInteractionListener");
+		}
+	}
 
-    public void openImagePicker(final int index)
-    {
-        List<String> permissionList = checkAndRequestPermissions(getApplicationContext());
-        final Fragment frag = this;
-        if (permissions(permissionList)) {
-            final CharSequence[] options = { "Take Photo", "Choose from Gallery","Cancel" };
-            mSelectedIndex = index;
-            AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-            builder.setTitle("Add Photo!");
-            builder.setItems(options, new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int item) {
-                    if (options[item].equals("Take Photo"))
-                    {
-                        Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-                        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.N) {
-                            // intent.putExtra(MediaStore.EXTRA_OUTPUT, getPhotoFileUri());
-                        } else {
-                            File f = new File(Environment.getExternalStorageDirectory(), "GROUP"+System.currentTimeMillis()+".jpg");
-                            Uri uri = FileProvider.getUriForFile(getActivity(), BuildConfig.APPLICATION_ID + ".provider",f);
-                            mCommonUri = uri;
-                        }
-                        startActivityForResult(intent, 1); // REQUEST_IMAGE_CAPTURE = 12345
-                    }
-                    else if (options[item].equals("Choose from Gallery"))
-                    {
-                        Intent intent = new   Intent(Intent.ACTION_PICK,android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-                        startActivityForResult(intent, 2);
-                    }
+	@Override
+	public void onDetach() {
+		super.onDetach();
+		mListener = null;
+	}
 
-                    else if (options[item].equals("Cancel")) {
-                        dialog.dismiss();
-                    }
-                }
-            });
-            builder.show();
-        }
-    }
-
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        //super.onActivityResult(requestCode, resultCode, data);
-        Drawable drawable = null;
-        if (resultCode == RESULT_OK) {
-            if (requestCode == 1) {
-                if (data != null)
-                {
-                    try {
-                        InputStream inputStream = getActivity().getContentResolver().openInputStream(mCommonUri);
-                        drawable = Drawable.createFromStream(inputStream, mCommonUri.toString() );
-                    } catch (FileNotFoundException e) {
-                        drawable = getResources().getDrawable(R.drawable.man);
-                    }
-                }
-            }
-            else if (requestCode == 2)
-            {
-                Uri selectedImage = data.getData();
-                String[] filePath = { MediaStore.Images.Media.DATA };
-                Cursor c = getApplicationContext().getContentResolver().query(selectedImage,filePath, null, null, null);
-                c.moveToFirst();
-                int columnIndex = c.getColumnIndex(filePath[0]);
-                String picturePath = c.getString(columnIndex);
-                c.close();
-                Bitmap thumbnail = (BitmapFactory.decodeFile(picturePath));
-                drawable=new BitmapDrawable(thumbnail);
-            }
-            setPreviewToImageView(drawable);
-        }
-    }
-
-    private void setPreviewToImageView(Drawable drawable)
-    {
-        switch (mSelectedIndex)
-        {
-            case 0:
-                mGrpImageFirst.setImageDrawable(drawable);
-                break;
-            case 1:
-                mGrpImageSecond.setImageDrawable(drawable);
-                break;
-            case 2:
-                mGrpImageThird.setImageDrawable(drawable);
-                break;
-            case 3:
-                mGrpImageFourth.setImageDrawable(drawable);
-                break;
-        }
-    }
-
-    void saveGroupDataToServer()
-    {
-        //Update Data to server
-        ApiInterface apiService =
-                ApiClient.getClient().create(ApiInterface.class);
-
-        Call<GroupResponse> call = null;
-        call = apiService.createGroup(SessionManagementUtil.getUserData().getProfileId(),
-                new GroupRequest(mGrpName.getText().toString(),mGrpStory.getText().toString(),SessionManagementUtil.getLocation()));
-
-        call.enqueue(new Callback<GroupResponse>() {
-            @Override
-            public void onResponse(Call<GroupResponse> call, Response<GroupResponse> response) {
-                Toast.makeText(getActivity(), "This is my Toast message!",
-                        Toast.LENGTH_LONG).show();
-            }
-
-            @Override
-            public void onFailure(Call<GroupResponse> call, Throwable t) {
-                // Log error here since request failed
-                Toast.makeText(getActivity(), "This is my failure message!",
-                        Toast.LENGTH_LONG).show();
-                Log.e(TAG, t.toString());
-            }
-        });
-    }
-    // TODO: Rename method, update argument and hook method into UI event
-    public void onButtonPressed(Uri uri) {
-        if (mListener != null) {
-            mListener.onFragmentInteraction(uri);
-        }
-    }
-
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-        if (context instanceof OnFragmentInteractionListener) {
-            mListener = (OnFragmentInteractionListener) context;
-        } else {
-            throw new RuntimeException(context.toString()
-                    + " must implement OnFragmentInteractionListener");
-        }
-    }
-
-    @Override
-    public void onDetach() {
-        super.onDetach();
-        mListener = null;
-    }
-
-    public interface OnFragmentInteractionListener {
-        // TODO: Update argument type and name
-        void onFragmentInteraction(Uri uri);
-    }
+	public interface OnFragmentInteractionListener {
+		// TODO: Update argument type and name
+		void onFragmentInteraction(Uri uri);
+	}
 }

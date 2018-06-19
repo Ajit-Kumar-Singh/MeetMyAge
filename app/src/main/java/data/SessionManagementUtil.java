@@ -10,7 +10,6 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 
 import java.lang.reflect.Type;
-import java.util.ArrayList;
 import java.util.List;
 
 import data.model.Group;
@@ -51,7 +50,10 @@ public class SessionManagementUtil {
 
     public  static final String KEY_RECOMMENDED_GROUPS = "recommended_groups";
 
+    public  static final String KEY_PROFILE_PATH = "profilepicture";
+
     public static Gson gson = new GsonBuilder().serializeNulls().create();
+
     // Constructor
     public SessionManagementUtil(Context context){
         if (_context == null)
@@ -100,6 +102,7 @@ public class SessionManagementUtil {
         editor.commit();
     }
 
+
     public static void updateLocation(Location loc)
     {
         editor.putString(KEY_LOCATION,gson.toJson(loc));
@@ -111,6 +114,17 @@ public class SessionManagementUtil {
     {
         Location loc = gson.fromJson(pref.getString(KEY_LOCATION,""), Location.class);
         return loc;
+    }
+
+    public static void saveProfileImagePath(String path)
+    {
+        editor.putString(KEY_PROFILE_PATH, path);
+        editor.commit();
+    }
+
+    public static String getImagePath()
+    {
+        return pref.getString(KEY_PROFILE_PATH,"");
     }
 
      public static Profile getUserData()

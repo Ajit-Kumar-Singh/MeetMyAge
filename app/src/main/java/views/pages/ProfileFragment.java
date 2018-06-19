@@ -1,11 +1,24 @@
 package views.pages;
 
+import android.app.AlertDialog;
+import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.database.Cursor;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
+import android.provider.MediaStore;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.FileProvider;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -13,11 +26,18 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.meetmyage.com.meetmyageapp.BuildConfig;
 import com.meetmyage.com.meetmyageapp.R;
 
+import java.io.File;
+import java.util.List;
+
+import Util.CommonUtil;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import data.ApiClient;
@@ -25,16 +45,24 @@ import data.ApiInterface;
 import data.SessionManagementUtil;
 import data.model.Location;
 import data.model.Profile;
+import data.model.ProfilePhotoRequest;
+import data.model.ProfilePhotoResponse;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+import static android.app.Activity.RESULT_OK;
+import static com.facebook.FacebookSdk.getApplicationContext;
+
 // Managing the Profile in this class
 public class ProfileFragment extends Fragment {
+    private static Bitmap mBitmap = null;
 
     private OnFragmentInteractionListener mListener;
     private String TAG = ProfileFragment.class.getSimpleName();
     private boolean isPreview = true;
+    private String mImagePath;
+    private Uri mCommonUri;
 
     @BindView(R.id.userName) TextView mProfileName;
     @BindView(R.id.profileWork) TextView mProfileWork;
@@ -47,6 +75,9 @@ public class ProfileFragment extends Fragment {
     @BindView(R.id.editprofileName) EditText mEditProfileName;
     @BindView(R.id.editprofileStory) EditText mEditProfileStrory;
     @BindView (R.id.editprofileWork) EditText mEditProfileWork;
+    @BindView(R.id.profileImage) ImageView mImageView;
+
+    private ProgressDialog mProgressDialog;
 
     public ProfileFragment() {
         // Required empty public constructor
@@ -69,7 +100,6 @@ public class ProfileFragment extends Fragment {
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         showPreviewPage();
-
         view.setFocusableInTouchMode(true);
         view.requestFocus();
         view.setOnKeyListener(new View.OnKeyListener() {
@@ -84,6 +114,13 @@ public class ProfileFragment extends Fragment {
                     return true;
                 }
                 return false;
+            }
+        });
+
+        mImageView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                openImagePicker();
             }
         });
     }
@@ -109,6 +146,14 @@ public class ProfileFragment extends Fragment {
                 }
             });
 
+            if (SessionManagementUtil.getImagePath() == null)
+            {
+                fetchProfilePicFromServerAndSaveToBitmap();
+            }
+            else
+            {
+                mImageView.setImageBitmap(mBitmap);
+            }
         }
     }
 
@@ -131,6 +176,37 @@ public class ProfileFragment extends Fragment {
                 }
             });
         }
+    }
+
+    private void fetchProfilePicFromServerAndSaveToBitmap()
+    {
+        mProgressDialog = new ProgressDialog(getActivity());
+        mProgressDialog.setMessage("Fetching Data");
+        mProgressDialog.setCancelable(false);
+        mProgressDialog.show();
+
+        //Update Data to server
+        ApiInterface apiService =
+                ApiClient.getClient().create(ApiInterface.class);
+
+        Call<ProfilePhotoResponse> call = null;
+        call = apiService.fetchProfileData(SessionManagementUtil.getUserData().getProfileId());
+        call.enqueue(new Callback<ProfilePhotoResponse>() {
+            @Override
+            public void onResponse(Call<ProfilePhotoResponse> call, Response<ProfilePhotoResponse> response) {
+                ProfilePhotoResponse responseProfile = response.body();
+                mBitmap = CommonUtil.convertStringToBitmap(responseProfile.getData());
+                mImageView.setImageBitmap(mBitmap);
+                mProgressDialog.hide();
+            }
+
+            @Override
+            public void onFailure(Call<ProfilePhotoResponse> call, Throwable t) {
+                // Log error here since request failed
+                mProgressDialog.hide();
+                Log.e(TAG, t.toString());
+            }
+        });
     }
 
     private void updateDataToServer()
@@ -168,6 +244,110 @@ public class ProfileFragment extends Fragment {
         }
     }
 
+    private boolean permissions(List<String> listPermissionsNeeded) {
+
+        if (!listPermissionsNeeded.isEmpty()) {
+            ActivityCompat.requestPermissions(getActivity(), listPermissionsNeeded.toArray
+                    (new String[listPermissionsNeeded.size()]), CommonUtil.REQUEST_ID_MULTIPLE_PERMISSIONS);
+            return false;
+        }
+        return true;
+    }
+
+    public void openImagePicker()
+    {
+        List<String> permissionList = CommonUtil.checkAndRequestPermissions(getApplicationContext());
+        final Fragment frag = this;
+        if (permissions(permissionList)) {
+            final CharSequence[] options = { "Take Photo", "Choose from Gallery","Cancel" };
+            AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+            builder.setTitle("Add Photo!");
+            builder.setItems(options, new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int item) {
+                    if (options[item].equals("Take Photo"))
+                    {
+                        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.N) {
+                            // intent.putExtra(MediaStore.EXTRA_OUTPUT, getPhotoFileUri());
+                        } else {
+                            File profilepath = new File(Environment.getExternalStorageDirectory(), "Profile"+System.currentTimeMillis()+".jpg");
+                            Uri uri = FileProvider.getUriForFile(getActivity(), BuildConfig.APPLICATION_ID + ".provider",profilepath);
+                            mCommonUri = uri;
+                            mImagePath = profilepath.getAbsolutePath();
+                        }
+                        Intent cameraIntent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
+                        cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, mCommonUri);
+                        startActivityForResult(cameraIntent, 1); // REQUEST_IMAGE_CAPTURE = 12345
+                    }
+                    else if (options[item].equals("Choose from Gallery"))
+                    {
+                        Intent intent = new   Intent(Intent.ACTION_PICK,android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                        startActivityForResult(intent, 2);
+                    }
+
+                    else if (options[item].equals("Cancel")) {
+                        dialog.dismiss();
+                    }
+                }
+            });
+            builder.show();
+        }
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        Drawable drawable = null;
+        if (resultCode == RESULT_OK) {
+            if (requestCode == 2) {
+                Uri selectedImage = data.getData();
+                String[] filePath = {MediaStore.Images.Media.DATA};
+                Cursor c = getApplicationContext().getContentResolver().query(selectedImage, filePath, null, null, null);
+                c.moveToFirst();
+                int columnIndex = c.getColumnIndex(filePath[0]);
+                mImagePath = c.getString(columnIndex);
+                c.close();
+                }
+            }
+        convertPathToBitmap();
+        mImageView.setImageBitmap(mBitmap);
+        saveImageProfilePicToServer();
+    }
+
+    private void convertPathToBitmap()
+    {
+        BitmapFactory.Options bmOptions = new BitmapFactory.Options();
+        mBitmap = BitmapFactory.decodeFile(mImagePath, bmOptions);
+    }
+
+    private void saveImageProfilePicToServer()
+    {
+        String base64String = CommonUtil.encodeImage(mBitmap);
+        //Update Data to server
+        ApiInterface apiService =
+                ApiClient.getClient().create(ApiInterface.class);
+
+        Call<Void> call = null;
+        call = apiService.uploadProfilePhoto(SessionManagementUtil.getUserData().getProfileId(),
+                new ProfilePhotoRequest(SessionManagementUtil.getUserData().getProfileName(), base64String));
+        call.enqueue(new Callback<Void>() {
+            @Override
+            public void onResponse(Call<Void> call, Response<Void> response) {
+                if (response.isSuccessful())
+                {
+                    Toast.makeText(getActivity(), "Upload Successful",
+                            Toast.LENGTH_LONG).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Void> call, Throwable t) {
+                // Log error here since request failed
+                Toast.makeText(getActivity(), "Upload Failed",
+                        Toast.LENGTH_LONG).show();
+            }
+        });
+
+    }
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
