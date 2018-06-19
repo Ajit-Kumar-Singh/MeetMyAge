@@ -18,7 +18,7 @@ public class SectionsPagerAdapter extends FragmentPagerAdapter {
     @Override
     public Fragment getItem(int position) {
         if (position == 0) {
-            return new RecommendedGroupsFragment();
+            return new RecommendedGroupsFragmentHolder();
         } else if (position == 1) {
             return new CreateGroupFragment();
         } else if (position == 2) {

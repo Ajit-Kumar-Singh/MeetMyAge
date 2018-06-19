@@ -14,6 +14,7 @@ public class TabbedLayout extends AppCompatActivity implements ProfileFragment.O
 EventsDetailsFragment.OnFragmentInteractionListener,
 CreateGroupFragment.OnFragmentInteractionListener,
 RecommendedGroupsFragment.OnFragmentInteractionListener,
+RecommendedGroupsFragmentHolder.OnFragmentInteractionListener,
 ProfileFragmentHolder.OnFragmentInteractionListener
 {
     private SectionsPagerAdapter mSectionsPagerAdapter;

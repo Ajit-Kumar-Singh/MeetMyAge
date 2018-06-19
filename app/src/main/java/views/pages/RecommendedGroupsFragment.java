@@ -118,7 +118,7 @@ public class RecommendedGroupsFragment extends Fragment {
 
     private void prepareGroupsData(){
         for (Group myGroup:mRecommendedGroups) {
-            View myView = mInflater.inflate(R.layout.fragment_recommended_groups_holder, null);
+            View myView = mInflater.inflate(R.layout.fragment_recommended_groups_view, null);
             mGroupName = myView.findViewById(R.id.group_details_holder_image_group_name);
             mGroupDesc = myView.findViewById(R.id.group_details_holder_image_group_desc);
             mGroupName.setText(myGroup.getGroupName());
@@ -133,30 +133,11 @@ public class RecommendedGroupsFragment extends Fragment {
                     Fragment fragment = new GroupDetailsFragment();
                     FragmentManager fragmentManager = getFragmentManager();
                     fragmentManager.beginTransaction()
-                            .replace(R.id.group_details_grid, fragment)
+                            .replace(R.id.recommended_groups_root_frame, fragment)
                             .commit();
                 }
             });
             mGroupDetailsGrid.addView(myView);
-        }
-        for (Group myGroup:mRecommendedGroups) {
-            View myView = mInflater.inflate(R.layout.fragment_recommended_groups_holder, null);
-            mGroupName = myView.findViewById(R.id.group_details_holder_image_group_name);
-            mGroupDesc = myView.findViewById(R.id.group_details_holder_image_group_desc);
-            mGroupName.setText(myGroup.getGroupName()+"1234");
-            mGroupDesc.setText("kjashdkjhsa");
-
-            mGroupDetailsGrid.addView(myView);
-        }
-        for (Group myGroup:mRecommendedGroups) {
-            View myView = mInflater.inflate(R.layout.fragment_recommended_groups_holder, null);
-            mGroupName = myView.findViewById(R.id.group_details_holder_image_group_name);
-            mGroupDesc = myView.findViewById(R.id.group_details_holder_image_group_desc);
-            mGroupName.setText(myGroup.getGroupName()+"abcd");
-            mGroupDesc.setText("hello askdk rnlksajdlajslkjsadljsa;ldjlksadjsalkdjlsakdlash");
-
-            mGroupDetailsGrid.addView(myView);
-
         }
 
     }
