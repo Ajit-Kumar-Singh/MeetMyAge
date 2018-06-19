@@ -22,7 +22,9 @@ import java.util.List;
 import butterknife.ButterKnife;
 import data.ApiClient;
 import data.ApiInterface;
+import data.SessionManagementUtil;
 import data.model.Group;
+import data.model.Profile;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -98,7 +100,9 @@ public class RecommendedGroupsFragment extends Fragment {
                 ApiClient.getClient().create(ApiInterface.class);
 
         Call<List<Group>> call = null;
-        call = apiService.getRecommendedGroupsForProfile(2);
+        Profile myProfile = SessionManagementUtil.getUserData();
+        Log.i("LOGGED_IN_PROFILE_ID",String.valueOf(myProfile.getProfileId()));
+        call = apiService.getRecommendedGroupsForProfile(myProfile.getProfileId());
 
         call.enqueue(new Callback<List<Group>>() {
 
@@ -123,9 +127,6 @@ public class RecommendedGroupsFragment extends Fragment {
             mGroupDesc = myView.findViewById(R.id.group_details_holder_image_group_desc);
             mGroupName.setText(myGroup.getGroupName());
             mGroupDesc.setText(myGroup.getGroupStory());
-            if (mGroupDesc.getLineCount() >= 3) {
-                mGroupDesc.setLines(3);
-            }
             FloatingActionButton myFloatingButton = myView.findViewById(R.id.group_details_holder_viewMore);
             myFloatingButton.setOnClickListener(new View.OnClickListener() {
                 @Override

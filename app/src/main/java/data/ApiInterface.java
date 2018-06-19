@@ -9,6 +9,7 @@ import data.model.GroupRequest;
 import data.model.GroupResponse;
 import data.model.Profile;
 import data.model.ProfilePost;
+import data.model.gmaps.GroupWithSubscription;
 import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.GET;
@@ -22,6 +23,9 @@ public interface ApiInterface {
 
     @GET("profiles/{id}/recommendedGroups")
     Call<List<Group>> getRecommendedGroupsForProfile(@Path("id") int id);
+
+    @GET("profiles/{id}/myGroups")
+    Call<List<GroupWithSubscription>> getMyGroups(@Path("id") int id);
 
     @POST("/profiles")
     Call<Profile> postProfile(@Body ProfilePost profile);

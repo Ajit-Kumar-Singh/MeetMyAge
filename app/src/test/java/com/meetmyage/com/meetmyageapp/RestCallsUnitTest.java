@@ -10,6 +10,7 @@ import data.ApiInterface;
 import data.GMapApiClient;
 import data.GMapApiInterface;
 import data.model.Group;
+import data.model.gmaps.GroupWithSubscription;
 import data.model.gmaps.GmapResponse;
 import data.model.gmaps.Result;
 import retrofit2.Call;
@@ -50,6 +51,23 @@ public class RestCallsUnitTest {
             List<Result> myLocations = myLocation.getResults();
             for (Result myTempLocation:myLocations) {
                 System.out.println(myTempLocation.getFormattedAddress());
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    @Test
+    public void testLoadMyGroups() {
+        Retrofit myApiClient = ApiClient.getClient();
+        ApiInterface myApiInterface = myApiClient.create(ApiInterface.class);
+        Call<List<GroupWithSubscription>> myRecommendedGroups =  myApiInterface.getMyGroups(2);
+        try {
+            Response<List<GroupWithSubscription>> myResponses = myRecommendedGroups.execute();
+            List<GroupWithSubscription> myGroups =  myResponses.body();
+            for (GroupWithSubscription myTempGroup:myGroups) {
+                System.out.println("GROUP_NAME:"+myTempGroup.getGroup().getGroupName() + "  GROUP_STORY:" + myTempGroup.getGroup().getGroupStory());
             }
         } catch (IOException e) {
             e.printStackTrace();
