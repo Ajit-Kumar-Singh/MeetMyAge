@@ -127,10 +127,12 @@ public class RecommendedGroupsFragment extends Fragment {
             mGroupDesc = myView.findViewById(R.id.group_details_holder_image_group_desc);
             mGroupName.setText(myGroup.getGroupName());
             mGroupDesc.setText(myGroup.getGroupStory());
+            final Group mySelectedGroup = myGroup;
             FloatingActionButton myFloatingButton = myView.findViewById(R.id.group_details_holder_viewMore);
             myFloatingButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    SessionManagementUtil.setSelectedGroup(mySelectedGroup);
                     Fragment fragment = new GroupDetailsFragment();
                     FragmentManager fragmentManager = getFragmentManager();
                     fragmentManager.beginTransaction()

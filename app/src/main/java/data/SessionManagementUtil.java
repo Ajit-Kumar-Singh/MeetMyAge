@@ -52,6 +52,8 @@ public class SessionManagementUtil {
 
     public  static final String KEY_PROFILE_PATH = "profilepicture";
 
+    public  static final String KEY_SELECTED_GROUP = "selectedGroup";
+
     public static Gson gson = new GsonBuilder().serializeNulls().create();
 
     // Constructor
@@ -102,7 +104,18 @@ public class SessionManagementUtil {
         editor.commit();
     }
 
+    public static void setSelectedGroup(Group pGroup) {
+        Log.d("KEY_SELECTED_GROUP", gson.toJson(pGroup));
+        editor.putString(KEY_SELECTED_GROUP,gson.toJson(pGroup));
+        editor.commit();
+    }
 
+
+    public static Group getSelectedGroup() {
+        Type fooType = new TypeToken<Group>() {}.getType();
+        Group grp = gson.fromJson(pref.getString(KEY_SELECTED_GROUP,""), fooType);
+        return grp;
+    }
     public static void updateLocation(Location loc)
     {
         editor.putString(KEY_LOCATION,gson.toJson(loc));
