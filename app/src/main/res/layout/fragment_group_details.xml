@@ -21,7 +21,8 @@
 
         <TextView
             android:text="TextView"
-            android:layout_height="40sp"
+            android:inputType="textMultiLine"
+            android:layout_height="wrap_content"
             android:id="@+id/recommended_group_details_group_name"
             android:gravity="center"
             android:layout_width="350sp"
@@ -36,7 +37,8 @@
         <TextView
             android:id="@+id/recommended_group_details_group_desc"
             android:layout_width="400sp"
-            android:layout_height="100sp"
+            android:layout_height="wrap_content"
+            android:inputType="textMultiLine"
             android:layout_below="@+id/recommended_group_details_group_name"
             android:layout_centerHorizontal="true"
             android:layout_marginTop="2sp"
@@ -70,7 +72,8 @@
             <TextView
                     android:id="@+id/recommended_group_interests"
                     android:layout_width="250sp"
-                    android:layout_height="80sp"
+                    android:inputType="textMultiLine"
+                    android:layout_height="wrap_content"
                     android:textSize="20sp"
                     android:gravity="right"
                     android:ellipsize="marquee"/>
