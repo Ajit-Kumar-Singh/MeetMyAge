@@ -1,22 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical">
-    <ScrollView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:scrollbars="vertical">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:scrollbars="vertical">
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="5sp">
         <com.veinhorn.scrollgalleryview.ScrollGalleryView
             android:id="@+id/scroll_gallery_view"
             android:layout_width="500sp"
             android:layout_height="350sp"
-            android:background="#000"/>
+            android:background="#000">
+
+
+        </com.veinhorn.scrollgalleryview.ScrollGalleryView>
+
         <TextView
             android:text="TextView"
             android:layout_height="40sp"
@@ -31,17 +33,44 @@
             android:ellipsize="marquee"></TextView>
 
         <TextView
-            android:text="TextView"
-            android:layout_height="100sp"
             android:id="@+id/recommended_group_details_group_desc"
-            android:layout_width="350sp"
+            android:layout_width="400sp"
+            android:layout_height="100sp"
             android:layout_below="@+id/recommended_group_details_group_name"
-            android:layout_marginTop="2sp"
             android:layout_centerHorizontal="true"
-            android:textSize="18sp"
-            android:ellipsize="marquee"></TextView>
+            android:layout_marginTop="2sp"
+            android:ellipsize="marquee"
+            android:padding="5sp"
+            android:text="TextView"
+            android:textSize="18sp"></TextView>
 
+            <TextView
+                android:text="TextView"
+                android:id="@+id/recommended_group_details_MembersTag"
+                android:layout_height="40sp"
+                android:layout_width="350sp"
+                android:layout_below="@+id/scroll_gallery_view"
+                android:layout_marginTop="2sp"
+                android:gravity="center"
+                android:layout_centerHorizontal="true"
+                android:layout_gravity="top|center_horizontal"
+                android:textSize="25sp"
+                android:textStyle="bold"
+                android:ellipsize="marquee">
+
+            </TextView>
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="50sp" />
+
+        <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/recommendedGroupsMembers"
+            android:orientation="vertical">
+
+        </LinearLayout>
 
     </LinearLayout>
-    </ScrollView>
-</LinearLayout>
+
+</ScrollView>
