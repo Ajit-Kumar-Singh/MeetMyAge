@@ -44,10 +44,14 @@ public class GroupDetailsFragment extends Fragment {
         TextView myNameTextView = pView.findViewById(R.id.recommended_group_details_group_name);
         TextView myDescTextView = pView.findViewById(R.id.recommended_group_details_group_desc);
         TextView myMembesTag = pView.findViewById(R.id.recommended_group_details_MembersTag);
+        TextView myGroupInterestsTag = pView.findViewById(R.id.recommended_group_interests_tag);
+        TextView myGroupInterests = pView.findViewById(R.id.recommended_group_interests);
         Group mySelectedGroup = SessionManagementUtil.getSelectedGroup();
         myNameTextView.setText(mySelectedGroup.getGroupName());
         myDescTextView.setText(mySelectedGroup.getGroupStory());
         myMembesTag.setText("Members");
+        myGroupInterestsTag.setText("Interests:");
+        myGroupInterests.setText("Pokemon GO, Hiking, Trekking, Exploration");
     }
     private void addImages(View pView) {
         List<MediaInfo> infos = new ArrayList<>();
