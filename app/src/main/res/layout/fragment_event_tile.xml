@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout android:id="@+id/event_details_holder_rel_layout"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:background="@drawable/rectangle"
+    android:padding="5sp"
+    android:layout_marginBottom="30sp"
+    android:layout_marginTop="30sp"
+    android:layout_marginRight="15sp"
+    android:layout_marginLeft="15sp"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <ImageView
+        android:layout_height="100sp"
+        android:id="@+id/event_details_holder_image"
+        android:layout_width="190sp"
+        android:src="@drawable/man"
+        android:layout_gravity="top|center_horizontal"
+        android:background="@color/com_facebook_blue"
+        android:layout_centerHorizontal="true">
+    </ImageView>
+
+    <TextView
+        android:text="TextView"
+        android:layout_height="25sp"
+        android:id="@+id/event_details_holder_image_event_name"
+        android:layout_width="175sp"
+        android:layout_below="@+id/event_details_holder_image"
+        android:layout_marginTop="2sp"
+        android:gravity="center"
+        android:layout_centerHorizontal="true"
+        android:layout_gravity="top|center_horizontal"
+        android:textSize="15sp"
+        android:textStyle="bold"
+        android:ellipsize="marquee"></TextView>
+
+    <TextView
+        android:text="TextView"
+        android:layout_height="50sp"
+        android:id="@+id/event_details_holder_image_event_desc"
+        android:layout_width="175sp"
+        android:layout_below="@+id/event_details_holder_image_event_name"
+        android:layout_marginTop="2sp"
+        android:gravity="center"
+        android:layout_centerHorizontal="true"
+        android:textSize="15sp"
+        android:ellipsize="marquee"></TextView>
+
+    <LinearLayout
+        android:layout_width="200sp"
+        android:layout_height="100sp"
+        android:orientation="horizontal">
+
+
+        <android.support.design.widget.FloatingActionButton
+
+            android:layout_width="10sp"
+            android:layout_height="100sp"
+            android:layout_gravity="top"
+            android:layout_margin="@dimen/fab_margin"
+            app:srcCompat="@drawable/ic_location_on_black_24dp"
+            app:backgroundTint="#dedede" />
+        <TextView
+            android:text="TextView"
+            android:id="@+id/event_details_holder_viewMore"
+            android:layout_height="100sp"
+            android:layout_width="45sp"
+            android:layout_marginTop="2sp"
+            android:layout_gravity="left"
+            android:inputType="textMultiLine"
+            android:textSize="10sp"
+            android:ellipsize="marquee"></TextView>
+        <View
+            android:layout_width="10dp"
+            android:layout_height="match_parent" />
+
+        <Button
+            android:id="@+id/button2"
+            android:layout_width="95sp"
+            android:layout_height="40sp"
+            android:text="Register" />
+
+
+    </LinearLayout>
+    <TextView
+        android:text="TextView"
+        android:layout_height="20sp"
+        android:layout_width="175sp"
+        android:id="@+id/event_details_peopleGoing"
+        android:layout_marginTop="2sp"
+        android:layout_gravity="left"
+        android:textSize="10sp"
+        android:textStyle="bold"
+        android:ellipsize="marquee"></TextView>
+</LinearLayout>
