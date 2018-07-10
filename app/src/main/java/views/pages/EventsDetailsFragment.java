@@ -44,7 +44,7 @@ public class EventsDetailsFragment extends Fragment {
             TextView myEventName = myView.findViewById(R.id.event_details_holder_image_event_name);
             TextView myEventDesc = myView.findViewById(R.id.event_details_holder_image_event_desc);
             TextView myEventLocation = myView.findViewById(R.id.event_details_holder_viewMore);
-            myPeopleGoing.setText(i+" people going");
+            myPeopleGoing.setText(" "+i+" people going");
             myEventLocation.setText("Flat 402, Vishnu Sapphire, Kondapur, Hyderabad, 500084");
             myEventDesc.setText(" hello hello hello hello please join hellp join");
             myEventName.setText(" Test Event "+i);
