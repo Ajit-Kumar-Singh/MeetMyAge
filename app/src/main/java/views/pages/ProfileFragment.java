@@ -29,7 +29,6 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.meetmyage.com.meetmyageapp.BuildConfig;
 import com.meetmyage.com.meetmyageapp.R;
@@ -344,16 +343,12 @@ public class ProfileFragment extends Fragment {
                 public void onResponse(Call<Void> call, Response<Void> response) {
                     if (response.isSuccessful())
                     {
-                        Toast.makeText(getActivity(), "Upload Successful",
-                                Toast.LENGTH_LONG).show();
                     }
                 }
 
                 @Override
                 public void onFailure(Call<Void> call, Throwable t) {
-                    // Log error here since request failed
-                    Toast.makeText(getActivity(), "Upload Failed",
-                            Toast.LENGTH_LONG).show();
+                  
                 }
             });
         }
