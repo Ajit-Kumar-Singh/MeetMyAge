@@ -75,12 +75,12 @@ public class SessionManagementUtil {
     /**
      * Create login session
      * */
-    public static void createLoginSession(int id, String name, String email, String work, String about){
+    public static void createLoginSession(int id, String name, String email, String about, String work){
         // Storing login value as TRUE
         editor.putBoolean(IS_LOGIN, true);
         editor.putInt(KEY_ID,id);
-        editor.putString(KEY_WORK,work);
         editor.putString(KEY_ABOUT,about);
+        editor.putString(KEY_WORK,work);
         // Storing name in pref
         editor.putString(KEY_NAME, name);
         // Storing email in pref
@@ -88,12 +88,12 @@ public class SessionManagementUtil {
         editor.commit();
     }
 
-    public static void updateProfile(String name, String email, String work, String about){
+    public static void updateProfile(String name, String email, String about, String work){
         // Storing login value as TRUE
 
         editor.putBoolean(IS_LOGIN, true);
-        editor.putString(KEY_WORK,work);
         editor.putString(KEY_ABOUT,about);
+        editor.putString(KEY_WORK,work);
         // Storing name in pref
         editor.putString(KEY_NAME, name);
 

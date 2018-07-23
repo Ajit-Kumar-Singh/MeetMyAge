@@ -68,7 +68,7 @@
             android:name="views.pages.LoginActivity"
             android:label="@string/title_activity_login" />
         <activity
-            android:name="views.pages.TabbedLayout"
+            android:name="views.pages.BottomNavigation"
             android:label="@string/title_activity_main2"
             android:exported="true"
             android:theme="@style/AppTheme.NoActionBar"></activity>

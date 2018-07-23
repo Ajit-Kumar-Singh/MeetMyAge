@@ -68,13 +68,17 @@ public class ProfileFragment extends Fragment {
     @BindView(R.id.profileWork) TextView mProfileWork;
     @BindView(R.id.profileStory) TextView mProfileStory;
     @BindView(R.id.city) TextView mProfileCity;
+    @BindView(R.id.emailId) TextView mEmailId;
+
     @BindView(R.id.fab) FloatingActionButton mFab;
     @BindView(R.id.layoutPreview) LinearLayout mLayoutPreview;
     @BindView(R.id.layoutEdit) LinearLayout mLayoutEdit;
     @BindView(R.id.saveProfile) Button saveProfile;
+
     @BindView(R.id.editprofileName) EditText mEditProfileName;
     @BindView(R.id.editprofileStory) EditText mEditProfileStrory;
     @BindView (R.id.editprofileWork) EditText mEditProfileWork;
+
     @BindView(R.id.profileImage) ImageView mImageView;
     @BindView(R.id.addPhoto) FloatingActionButton mAddPhoto;
 
@@ -137,6 +141,7 @@ public class ProfileFragment extends Fragment {
             Profile savedProfile = SessionManagementUtil.getUserData();
             mProfileName.setText(savedProfile.getProfileName());
             mProfileStory.setText(savedProfile.getProfileStory());
+            mEmailId.setText(savedProfile.getProfileEmail());
             mProfileWork.setText(savedProfile.getProfileWork());
             mProfileCity.setText(savedProfile.getLocation().getCity());
             isPreview = false;
@@ -165,7 +170,7 @@ public class ProfileFragment extends Fragment {
             //Set Initial data
             Profile savedProfile = SessionManagementUtil.getUserData();
             mEditProfileName.setText(savedProfile.getProfileName());
-            mProfileStory.setText(savedProfile.getProfileStory());
+            mEditProfileStrory.setText(savedProfile.getProfileStory());
             mEditProfileWork.setText(savedProfile.getProfileWork());
             mLayoutEdit.setVisibility(View.VISIBLE);
             mLayoutPreview.setVisibility(View.GONE);
@@ -234,7 +239,7 @@ public class ProfileFragment extends Fragment {
             public void onResponse(Call<Profile> call, Response<Profile> response) {
                 Profile responseProfile = response.body();
                 SessionManagementUtil.updateProfile(
-                        responseProfile.getProfileName(),"",responseProfile.getProfileStory(),responseProfile.getProfileWork());
+                        responseProfile.getProfileName(),"ajit.sumitsingh@gmail.com",responseProfile.getProfileStory(),responseProfile.getProfileWork());
                 showPreviewPage();
             }
 
@@ -324,32 +329,34 @@ public class ProfileFragment extends Fragment {
 
     private void saveImageProfilePicToServer()
     {
-        String base64String = CommonUtil.encodeImage(mBitmap);
-        //Update Data to server
-        ApiInterface apiService =
-                ApiClient.getClient().create(ApiInterface.class);
+        if (mBitmap != null)
+        {
+            String base64String = CommonUtil.encodeImage(mBitmap);
+            //Update Data to server
+            ApiInterface apiService =
+                    ApiClient.getClient().create(ApiInterface.class);
 
-        Call<Void> call = null;
-        call = apiService.uploadProfilePhoto(SessionManagementUtil.getUserData().getProfileId(),
-                new ProfilePhotoRequest(SessionManagementUtil.getUserData().getProfileName(), base64String));
-        call.enqueue(new Callback<Void>() {
-            @Override
-            public void onResponse(Call<Void> call, Response<Void> response) {
-                if (response.isSuccessful())
-                {
-                    Toast.makeText(getActivity(), "Upload Successful",
+            Call<Void> call = null;
+            call = apiService.uploadProfilePhoto(SessionManagementUtil.getUserData().getProfileId(),
+                    new ProfilePhotoRequest(SessionManagementUtil.getUserData().getProfileName(), base64String));
+            call.enqueue(new Callback<Void>() {
+                @Override
+                public void onResponse(Call<Void> call, Response<Void> response) {
+                    if (response.isSuccessful())
+                    {
+                        Toast.makeText(getActivity(), "Upload Successful",
+                                Toast.LENGTH_LONG).show();
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<Void> call, Throwable t) {
+                    // Log error here since request failed
+                    Toast.makeText(getActivity(), "Upload Failed",
                             Toast.LENGTH_LONG).show();
                 }
-            }
-
-            @Override
-            public void onFailure(Call<Void> call, Throwable t) {
-                // Log error here since request failed
-                Toast.makeText(getActivity(), "Upload Failed",
-                        Toast.LENGTH_LONG).show();
-            }
-        });
-
+            });
+        }
     }
 
     // TODO: Rename method, update argument and hook method into UI event

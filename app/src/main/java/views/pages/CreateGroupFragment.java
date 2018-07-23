@@ -88,7 +88,6 @@ public class CreateGroupFragment extends Fragment {
 				openImagePicker();
 			}
 		});
-
 		mSaveGroup.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View view) {
@@ -149,11 +148,11 @@ public class CreateGroupFragment extends Fragment {
 
 	@Override
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
-		Drawable drawable = null;
 		if (resultCode == RESULT_OK) {
 			if (requestCode == 1) {
 				mGrpImage.setImageURI(mCommonUri);
 			} else if (requestCode == 2) {
+				Drawable drawable = null;
 				Uri selectedImage = data.getData();
 				String[] filePath = {MediaStore.Images.Media.DATA};
 				Cursor c = getApplicationContext().getContentResolver().query(selectedImage, filePath, null, null, null);

@@ -88,7 +88,7 @@ public class EditProfileFragment extends Fragment {
                         responseProfile.getProfileName(),"",responseProfile.getProfileStory(),responseProfile.getProfileWork());
                 FragmentTransaction trans = getFragmentManager()
                         .beginTransaction();
-                trans.replace(R.id.root_frame, new ProfileFragment());
+                trans.replace(R.id.fragment_conatiner, new ProfileFragment());
                 trans.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
                 trans.addToBackStack(null);
                 trans.commit();

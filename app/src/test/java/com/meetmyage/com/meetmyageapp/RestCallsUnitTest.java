@@ -38,7 +38,6 @@ public class RestCallsUnitTest {
 
     }
 
-
     @Test
     public void testGetLocationForLatLong() {
         Retrofit myApiClient = GMapApiClient.getClientForGMAP();
@@ -72,6 +71,5 @@ public class RestCallsUnitTest {
         } catch (IOException e) {
             e.printStackTrace();
         }
-
     }
 }

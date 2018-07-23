@@ -136,7 +136,7 @@ public class RecommendedGroupsFragment extends Fragment {
                     Fragment fragment = new GroupDetailsFragment();
                     FragmentManager fragmentManager = getFragmentManager();
                     fragmentManager.beginTransaction()
-                            .replace(R.id.recommended_groups_root_frame, fragment)
+                            .replace(R.id.fragment_conatiner, fragment)
                             .commit();
                 }
             });

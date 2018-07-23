@@ -13,8 +13,6 @@ import com.facebook.FacebookException;
 import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
 
-import java.util.List;
-
 import Presenter.location.LocationListenerImpl;
 import data.ApiClient;
 import data.ApiInterface;
@@ -157,7 +155,7 @@ public class LoginPresenterImpl  implements LoginContract.Presenter {
 
     @Override
     public void saveProfileToSessionPreference(Profile profile) {
-        SessionManagementUtil.createLoginSession(profile.getProfileId(),profile.getProfileName(),"",profile.getProfileStory(),profile.getProfileWork());
+        SessionManagementUtil.createLoginSession(profile.getProfileId(),profile.getProfileName(),"ajit.sumitsingh@gmail.com",profile.getProfileStory(),profile.getProfileWork());
     }
 
     @Override
@@ -196,6 +194,5 @@ public class LoginPresenterImpl  implements LoginContract.Presenter {
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         callbackManager.onActivityResult(requestCode, resultCode, data);
     }
-
 
 }

@@ -40,14 +40,14 @@ public class LoginActivity extends AppCompatActivity implements LoginContract.vi
             mProgressDialog.setVisibility(View.GONE);
             final LoginButton loginButton = (LoginButton) findViewById(R.id.facbookSignin);
             mLoginPresenter.fbLoginButtonClicked(loginButton);
-
         }
     }
 
     @Override
     public void onSuccess() {
-        Intent intent = new Intent(LoginActivity.this, TabbedLayout.class);
+        Intent intent = new Intent(LoginActivity.this, BottomNavigation.class);
         startActivity(intent);
+        finish();
     }
 
     @Override
