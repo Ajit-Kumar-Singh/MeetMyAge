@@ -2,6 +2,7 @@ package views.pages;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.location.Location;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
@@ -43,23 +44,38 @@ public class GroupDetailsFragment extends Fragment {
     private void populateDescription(View pView) {
         TextView myNameTextView = pView.findViewById(R.id.recommended_group_details_group_name);
         TextView myDescTextView = pView.findViewById(R.id.recommended_group_details_group_desc);
-        TextView myMembesTag = pView.findViewById(R.id.recommended_group_details_MembersTag);
-        TextView myGroupInterestsTag = pView.findViewById(R.id.recommended_group_interests_tag);
-        TextView myGroupInterests = pView.findViewById(R.id.recommended_group_interests);
         Group mySelectedGroup = SessionManagementUtil.getSelectedGroup();
         myNameTextView.setText(mySelectedGroup.getGroupName());
         myDescTextView.setText(mySelectedGroup.getGroupStory());
-        myMembesTag.setText("Members");
-        myGroupInterestsTag.setText("Interests:");
-        myGroupInterests.setText("Pokemon GO, Hiking, Trekking, Exploration");
+        TextView myGroupName = pView.findViewById(R.id.recommended_group_details_distance);
+        data.model.Location myGrpLocation = mySelectedGroup.getLocation();
+        float distance = 0.0f;
+        if (myGrpLocation != null) {
+            Location locationA = new Location("point A");
+
+            locationA.setLatitude(myGrpLocation.getLatitude());
+            locationA.setLongitude(myGrpLocation.getLongitude());
+
+            Location locationB = new Location("point B");
+
+            locationB.setLatitude(SessionManagementUtil.getLocation().getLatitude());
+            locationB.setLongitude(SessionManagementUtil.getLocation().getLongitude());
+
+            distance = locationA.distanceTo(locationB);
+            myGroupName.setText(mySelectedGroup.getLocation().getCity()+", "+ distance );
+        }
+
     }
     private void addImages(View pView) {
         List<MediaInfo> infos = new ArrayList<>();
         Bitmap myManImage = BitmapFactory.decodeResource(getContext().getResources(),
                 R.drawable.man);
-        Bitmap resized = Bitmap.createScaledBitmap(myManImage, 700, 500, true);
+        Bitmap resized = Bitmap.createScaledBitmap(myManImage, 500, 350, true);
+        Bitmap myNavImage = BitmapFactory.decodeResource(getContext().getResources(),
+                R.drawable.nav_menu_header_bg);
+        Bitmap resized2 = Bitmap.createScaledBitmap(myNavImage, 500, 350, true);
         infos.add(MediaInfo.mediaLoader(new DefaultImageLoader(resized)));
-        infos.add(MediaInfo.mediaLoader(new DefaultImageLoader(R.drawable.nav_menu_header_bg)));
+        infos.add(MediaInfo.mediaLoader(new DefaultImageLoader(resized2)));
         infos.add(MediaInfo.mediaLoader(new DefaultImageLoader(resized)));
 
         ScrollGalleryView scrollGalleryView = (ScrollGalleryView)pView.findViewById(R.id.scroll_gallery_view);
@@ -73,11 +89,8 @@ public class GroupDetailsFragment extends Fragment {
 
     private void addMembers(View pView) {
         LinearLayout myLayout = pView.findViewById(R.id.recommendedGroupsMembers);
-        for (int i=1; i <=5; i++) {
+        for (int i=1; i <=15; i++) {
             View myView = mInflater.inflate(R.layout.fragment_group_members, null);
-            TextView mMemberName = myView.findViewById(R.id.group_members_name);
-            mMemberName.setText("Bharwa number "+i);
-            Log.i("BHARWA NO",""+i);
             myLayout.addView(myView);
         }
     }
