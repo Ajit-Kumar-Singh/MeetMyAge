@@ -11,12 +11,15 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.meetmyage.com.meetmyageapp.R;
 
+import java.util.Iterator;
 import java.util.List;
 
 import butterknife.ButterKnife;
@@ -38,7 +41,10 @@ public class RecommendedGroupsFragment extends Fragment {
     List<Group> mRecommendedGroups = null;
     private ProgressBar mProgressDialog;
     private LayoutInflater mInflater;
-
+    private ViewGroup mContainer;
+    private Bundle mBundle;
+    Iterator<Group> mIterator;
+    View mGroupDetailsView;
     public RecommendedGroupsFragment() {
         // Required empty public constructor
     }
@@ -54,15 +60,70 @@ public class RecommendedGroupsFragment extends Fragment {
 
 
         // Inflate the layout for this fragment
-        View myGroupDetailsView  = inflater.inflate(R.layout.fragment_recommended_groups, container, false);
-        ButterKnife.bind(this,myGroupDetailsView);
-        mGroupDetailsGrid= myGroupDetailsView.findViewById(R.id.group_details_grid);
-        mProgressDialog = myGroupDetailsView.findViewById(R.id.group_details_progress);
+        mGroupDetailsView  = inflater.inflate(R.layout.fragment_recommended_groups, container, false);
+        ButterKnife.bind(this,mGroupDetailsView);
+        mGroupDetailsGrid= mGroupDetailsView.findViewById(R.id.group_details_grid);
+        mProgressDialog = mGroupDetailsView.findViewById(R.id.group_details_progress);
         mProgressDialog.setVisibility(View.VISIBLE);
         mInflater = inflater;
-        getRecommendGroups();
 
-        return myGroupDetailsView;
+        getRecommendGroups();
+        return mGroupDetailsView;
+    }
+
+    private void addGroupDetails(Group myGroup) {
+        View myGroupDetails =  mInflater.inflate(R.layout.fragment_group_details,null);
+        GroupDetailsFragmentHelper myHelper = new GroupDetailsFragmentHelper(myGroup.getGroupId(),myGroup.getGroupName(),myGroup.getGroupStory(),myGroup.getLocation(),getContext(),mInflater,getFragmentManager());
+        myHelper.addImages(myGroupDetails);
+        myHelper.populateDescription(myGroupDetails);
+        myHelper.addMembers(myGroupDetails);
+        mGroupDetailsGrid.removeAllViews();
+        Animation slideUp = AnimationUtils.loadAnimation(getContext(), R.anim.swing_up_left);
+        Animation slideDown = AnimationUtils.loadAnimation(getContext(), R.anim.swing_up_right);
+        myGroupDetails.startAnimation(slideUp);
+        myGroupDetails.setVisibility(View.VISIBLE);
+        mGroupDetailsGrid.addView(myGroupDetails);
+    }
+
+    private void addGroupDetailsReject(Group myGroup) {
+        View myGroupDetails =  mInflater.inflate(R.layout.fragment_group_details,null);
+        GroupDetailsFragmentHelper myHelper = new GroupDetailsFragmentHelper(myGroup.getGroupId(),myGroup.getGroupName(),myGroup.getGroupStory(),myGroup.getLocation(),getContext(),mInflater,getFragmentManager());
+        myHelper.addImages(myGroupDetails);
+        myHelper.populateDescription(myGroupDetails);
+        myHelper.addMembers(myGroupDetails);
+        mGroupDetailsGrid.removeAllViews();
+        Animation slideDown = AnimationUtils.loadAnimation(getContext(), R.anim.swing_up_right);
+        myGroupDetails.startAnimation(slideDown);
+        myGroupDetails.setVisibility(View.VISIBLE);
+        mGroupDetailsGrid.addView(myGroupDetails);
+    }
+
+    private void addGroupNav(View pView) {
+        FloatingActionButton myFloatingButton = pView.findViewById(R.id.group_details_holder_viewMore);
+        myFloatingButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (mIterator.hasNext()) {
+                    Group myCurrentGroup = mIterator.next();
+                    if (myCurrentGroup != null) {
+                        addGroupDetails(myCurrentGroup);
+                    }
+                }
+            }
+        });
+
+        FloatingActionButton myFloatingButtonReject = pView.findViewById(R.id.group_details_holder_join);
+        myFloatingButtonReject.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (mIterator.hasNext()) {
+                    Group myCurrentGroup = mIterator.next();
+                    if (myCurrentGroup != null) {
+                        addGroupDetailsReject(myCurrentGroup);
+                    }
+                }
+            }
+        });
     }
 
     // TODO: Rename method, update argument and hook method into UI event
@@ -110,7 +171,14 @@ public class RecommendedGroupsFragment extends Fragment {
             public void onResponse(Call<List<Group>> call, Response<List<Group>> response) {
                 mRecommendedGroups = response.body();
                 mProgressDialog.setVisibility(View.GONE);
-                prepareGroupsData();
+                mIterator = mRecommendedGroups.iterator();
+                if (mIterator.hasNext()) {
+                    Group myCurrentGroup = mIterator.next();
+                    if (myCurrentGroup != null) {
+                        addGroupDetails(myCurrentGroup);
+                    }
+                    addGroupNav(mGroupDetailsView);
+                }
             }
 
             @Override
@@ -120,29 +188,6 @@ public class RecommendedGroupsFragment extends Fragment {
         });
     }
 
-    private void prepareGroupsData(){
-        for (Group myGroup:mRecommendedGroups) {
-            View myView = mInflater.inflate(R.layout.fragment_recommended_groups_view, null);
-            mGroupName = myView.findViewById(R.id.group_details_holder_image_group_name);
-            mGroupDesc = myView.findViewById(R.id.group_details_holder_image_group_desc);
-            mGroupName.setText(myGroup.getGroupName());
-            mGroupDesc.setText(myGroup.getGroupStory());
-            final Group mySelectedGroup = myGroup;
-            FloatingActionButton myFloatingButton = myView.findViewById(R.id.group_details_holder_viewMore);
-            myFloatingButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    SessionManagementUtil.setSelectedGroup(mySelectedGroup);
-                    Fragment fragment = new GroupDetailsFragment();
-                    FragmentManager fragmentManager = getFragmentManager();
-                    fragmentManager.beginTransaction()
-                            .replace(R.id.fragment_conatiner, fragment)
-                            .commit();
-                }
-            });
-            mGroupDetailsGrid.addView(myView);
 
-        }
 
-    }
 }
