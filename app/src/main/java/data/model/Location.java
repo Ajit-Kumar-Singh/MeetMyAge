@@ -5,6 +5,17 @@ import com.google.gson.annotations.SerializedName;
 
 public class Location {
 
+    public Integer getLocationId() {
+        return locationId;
+    }
+
+    public void setLocationId(Integer locationId) {
+        this.locationId = locationId;
+    }
+
+    @SerializedName("locationId")
+    @Expose
+    private Integer locationId;
     @SerializedName("addressLine1")
     @Expose
     private String addressLine1;

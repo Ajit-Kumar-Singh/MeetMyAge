@@ -12,6 +12,7 @@ import data.model.ProfilePhotoRequest;
 import data.model.ProfilePhotoResponse;
 import data.model.ProfilePost;
 import data.model.gmaps.GroupWithSubscription;
+import data.model.gmaps.RecommendedGroupDetails;
 import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.GET;
@@ -47,5 +48,8 @@ public interface ApiInterface {
 
     @GET("profiles/{id}/profilePhoto")
     Call<ProfilePhotoResponse> fetchProfileData(@Path("id") int id);
+
+    @GET("profiles/{profileId}/recommendedGroups/{groupId}")
+    Call<RecommendedGroupDetails> getRecommendedGroupDetails(@Path("profileId") int profileId, @Path("groupId") int groupId);
 
 }

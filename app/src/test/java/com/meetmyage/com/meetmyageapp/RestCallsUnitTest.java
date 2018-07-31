@@ -10,8 +10,11 @@ import data.ApiInterface;
 import data.GMapApiClient;
 import data.GMapApiInterface;
 import data.model.Group;
+import data.model.Location;
+import data.model.gmaps.GroupMembers;
 import data.model.gmaps.GroupWithSubscription;
 import data.model.gmaps.GmapResponse;
+import data.model.gmaps.RecommendedGroupDetails;
 import data.model.gmaps.Result;
 import retrofit2.Call;
 import retrofit2.Response;
@@ -67,6 +70,26 @@ public class RestCallsUnitTest {
             List<GroupWithSubscription> myGroups =  myResponses.body();
             for (GroupWithSubscription myTempGroup:myGroups) {
                 System.out.println("GROUP_NAME:"+myTempGroup.getGroup().getGroupName() + "  GROUP_STORY:" + myTempGroup.getGroup().getGroupStory());
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+
+    @Test
+    public void testLoadMyGroupDetails() {
+        Retrofit myApiClient = ApiClient.getClient();
+        ApiInterface myApiInterface = myApiClient.create(ApiInterface.class);
+        Call<RecommendedGroupDetails> myRecommendedGroups =  myApiInterface.getRecommendedGroupDetails(6,7);
+        try {
+            Response<RecommendedGroupDetails> myResponses = myRecommendedGroups.execute();
+            RecommendedGroupDetails myGroupDetails =  myResponses.body();
+            Location myLocation = myGroupDetails.getGroupDetails().getLocation();
+            System.out.println(myLocation.getAddressLine1()+" "+myLocation.getCity());
+            GroupMembers[] myMembers = myGroupDetails.getGroupMembers();
+            for (GroupMembers myTempGroup:myMembers) {
+                System.out.println(myTempGroup.getProfile().getProfileName());
             }
         } catch (IOException e) {
             e.printStackTrace();
