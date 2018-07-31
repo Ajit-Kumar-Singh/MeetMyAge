@@ -26,33 +26,33 @@
             android:numColumns="1">
         </LinearLayout>
     <LinearLayout
-        android:layout_width="350sp"
-        android:layout_height="100sp">
+        android:layout_width="400sp"
+        android:layout_height="100sp"
+        android:orientation="horizontal"
+        android:gravity="center">
 
         <android.support.design.widget.FloatingActionButton
             android:id="@+id/group_details_holder_viewMore"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:layout_gravity="top|left"
+            android:layout_gravity="center"
             android:layout_margin="@dimen/fab_margin"
-            android:src="@drawable/ic_more_horiz_black_24dp"
+            android:src="@drawable/ic_sentiment_satisfied_black_24dp"
             app:backgroundTint="#dedede" />
 
-        <View
-            android:layout_width="200dp"
-            android:layout_height="match_parent" />
+
 
         <android.support.design.widget.FloatingActionButton
             android:id="@+id/group_details_holder_join"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:layout_gravity="top|right"
+            android:layout_gravity="center"
             android:layout_margin="@dimen/fab_margin"
-            android:src="@drawable/ic_add_circle_black_24dp"
+            android:src="@drawable/ic_sentiment_dissatisfied_black_24dp"
             app:backgroundTint="#dedede" />
 
     </LinearLayout>
     <View
         android:layout_width="match_parent"
-        android:layout_height="30sp" />
+        android:layout_height="40sp" />
 </LinearLayout>
