@@ -75,8 +75,7 @@ public class RecommendedGroupsFragment extends Fragment {
         View myGroupDetails =  mInflater.inflate(R.layout.fragment_group_details,null);
         GroupDetailsFragmentHelper myHelper = new GroupDetailsFragmentHelper(myGroup.getGroupId(),myGroup.getGroupName(),myGroup.getGroupStory(),myGroup.getLocation(),getContext(),mInflater,getFragmentManager());
         myHelper.addImages(myGroupDetails);
-        myHelper.populateDescription(myGroupDetails);
-        myHelper.addMembers(myGroupDetails);
+        myHelper.getRecommendGroups(myGroupDetails);
         mGroupDetailsGrid.removeAllViews();
         Animation slideUp = AnimationUtils.loadAnimation(getContext(), R.anim.swing_up_left);
         Animation slideDown = AnimationUtils.loadAnimation(getContext(), R.anim.swing_up_right);
@@ -89,8 +88,7 @@ public class RecommendedGroupsFragment extends Fragment {
         View myGroupDetails =  mInflater.inflate(R.layout.fragment_group_details,null);
         GroupDetailsFragmentHelper myHelper = new GroupDetailsFragmentHelper(myGroup.getGroupId(),myGroup.getGroupName(),myGroup.getGroupStory(),myGroup.getLocation(),getContext(),mInflater,getFragmentManager());
         myHelper.addImages(myGroupDetails);
-        myHelper.populateDescription(myGroupDetails);
-        myHelper.addMembers(myGroupDetails);
+        myHelper.getRecommendGroups(myGroupDetails);
         mGroupDetailsGrid.removeAllViews();
         Animation slideDown = AnimationUtils.loadAnimation(getContext(), R.anim.swing_up_right);
         myGroupDetails.startAnimation(slideDown);

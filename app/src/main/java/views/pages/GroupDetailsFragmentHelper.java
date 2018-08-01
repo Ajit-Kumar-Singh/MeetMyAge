@@ -5,6 +5,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.location.Location;
 import android.support.v4.app.FragmentManager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.LinearLayout;
@@ -18,7 +19,16 @@ import com.veinhorn.scrollgalleryview.loader.DefaultImageLoader;
 import java.util.ArrayList;
 import java.util.List;
 
+import data.ApiClient;
+import data.ApiInterface;
 import data.SessionManagementUtil;
+import data.model.Group;
+import data.model.Profile;
+import data.model.gmaps.GroupMembers;
+import data.model.gmaps.RecommendedGroupDetails;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class GroupDetailsFragmentHelper {
 
@@ -29,6 +39,7 @@ public class GroupDetailsFragmentHelper {
     Context mContext;
     LayoutInflater mInflater;
     FragmentManager fragmentManager;
+    GroupMembers[] groupMembers;
     public GroupDetailsFragmentHelper(long pGroupId, String pGroupName, String pGroupDesc,data.model.Location pGroupLocation , Context pContext, LayoutInflater pInflater, FragmentManager pFragMentManager) {
         mGroupId = pGroupId;
         mGroupName = pGroupName;
@@ -57,7 +68,7 @@ public class GroupDetailsFragmentHelper {
             locationB.setLongitude(SessionManagementUtil.getLocation().getLongitude());
 
             distance = locationA.distanceTo(locationB);
-            myGroupName.setText(mGroupLocation.getCity()+", "+ distance );
+            myGroupName.setText(mGroupLocation.getCity()+", "+ distance/1000 +"km" );
         }
 
     }
@@ -84,9 +95,34 @@ public class GroupDetailsFragmentHelper {
 
     public void addMembers(View pView) {
         LinearLayout myLayout = pView.findViewById(R.id.recommendedGroupsMembers);
-        for (int i=1; i <=15; i++) {
+        for (GroupMembers myMember:groupMembers) {
             View myView = mInflater.inflate(R.layout.fragment_group_members, null);
             myLayout.addView(myView);
         }
+    }
+
+    public void getRecommendGroups(final View pView) {
+        ApiInterface apiService =
+                ApiClient.getClient().create(ApiInterface.class);
+
+        Call<RecommendedGroupDetails> call = null;
+        Profile myProfile = SessionManagementUtil.getUserData();
+        Log.i("LOGGED_IN_PROFILE_ID",String.valueOf(myProfile.getProfileId()));
+        call = apiService.getRecommendedGroupDetails(myProfile.getProfileId(),(int)mGroupId);
+        call.enqueue(new Callback<RecommendedGroupDetails>() {
+
+            @Override
+            public void onResponse(Call<RecommendedGroupDetails> call, Response<RecommendedGroupDetails> response) {
+                mGroupLocation = response.body().getGroupDetails().getLocation();
+                groupMembers = response.body().getGroupMembers();
+                populateDescription(pView);
+                addMembers(pView);
+            }
+
+            @Override
+            public void onFailure(Call<RecommendedGroupDetails> call, Throwable t) {
+                Log.e("ERROR GETTING Groups", t.toString());
+            }
+        });
     }
 }
