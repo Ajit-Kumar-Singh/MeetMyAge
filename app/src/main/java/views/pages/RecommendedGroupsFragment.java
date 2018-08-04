@@ -72,11 +72,13 @@ public class RecommendedGroupsFragment extends Fragment {
     }
 
     private void addGroupDetails(Group myGroup) {
+        long myStartTime = System.currentTimeMillis();
         View myGroupDetails =  mInflater.inflate(R.layout.fragment_group_details,null);
         GroupDetailsFragmentHelper myHelper = new GroupDetailsFragmentHelper(myGroup.getGroupId(),myGroup.getGroupName(),myGroup.getGroupStory(),myGroup.getLocation(),getContext(),mInflater,getFragmentManager());
 
         mGroupDetailsGrid.removeAllViews();
         myHelper.getRecommendGroups(myGroupDetails);
+        Log.d("Render time card ",String.valueOf(System.currentTimeMillis()-myStartTime));
         Animation slideUp = AnimationUtils.loadAnimation(getContext(), R.anim.swing_up_left);
         Animation slideDown = AnimationUtils.loadAnimation(getContext(), R.anim.swing_up_right);
         myGroupDetails.startAnimation(slideUp);

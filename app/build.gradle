@@ -48,4 +48,6 @@ dependencies {
     annotationProcessor 'com.jakewharton:butterknife-compiler:8.6.0'
     compile 'com.android.support:gridlayout-v7:26.1.0'
     compile 'com.veinhorn.scrollgalleryview:library:1.0.8'
+    compile 'com.squareup.okhttp:okhttp:2.4.0'
+    compile 'com.squareup.okhttp:okhttp-urlconnection:2.4.0'
 }

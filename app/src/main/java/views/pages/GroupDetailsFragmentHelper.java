@@ -1,13 +1,16 @@
 package views.pages;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.location.Location;
 import android.support.v4.app.FragmentManager;
+import android.text.Layout;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -19,11 +22,13 @@ import com.veinhorn.scrollgalleryview.loader.DefaultImageLoader;
 import java.util.ArrayList;
 import java.util.List;
 
+import Util.CommonUtil;
 import data.ApiClient;
 import data.ApiInterface;
 import data.SessionManagementUtil;
 import data.model.Group;
 import data.model.Profile;
+import data.model.ProfilePhotoResponse;
 import data.model.gmaps.GroupMembers;
 import data.model.gmaps.RecommendedGroupDetails;
 import retrofit2.Call;
@@ -98,8 +103,7 @@ public class GroupDetailsFragmentHelper {
     public void addMembers(View pView) {
         LinearLayout myLayout = pView.findViewById(R.id.recommendedGroupsMembers);
         for (GroupMembers myMember:groupMembers) {
-            View myView = mInflater.inflate(R.layout.fragment_group_members, null);
-            myLayout.addView(myView);
+            fetchProfilePicFromServerAndSaveToBitmap(myMember.getProfileId(),myLayout);
         }
     }
 
@@ -127,6 +131,48 @@ public class GroupDetailsFragmentHelper {
             @Override
             public void onFailure(Call<RecommendedGroupDetails> call, Throwable t) {
                 Log.e("ERROR GETTING Groups", t.toString());
+            }
+        });
+    }
+
+    private void fetchProfilePicFromServerAndSaveToBitmap(int profileID,final LinearLayout myLayout)
+    {
+
+        final long myStartTime = System.currentTimeMillis();
+        //Update Data to server
+        ApiInterface apiService =
+                ApiClient.getClient().create(ApiInterface.class);
+
+        Call<ProfilePhotoResponse> call = null;
+        call = apiService.fetchProfileData(profileID);
+        call.enqueue(new Callback<ProfilePhotoResponse>() {
+            @Override
+            public void onResponse(Call<ProfilePhotoResponse> call, Response<ProfilePhotoResponse> response) {
+                ProfilePhotoResponse responseProfile = response.body();
+                String data = responseProfile.getData();
+                View myView = mInflater.inflate(R.layout.fragment_group_members, null);
+                Log.d("Web service call time ",String.valueOf(System.currentTimeMillis()-myStartTime));
+                if (data.isEmpty())
+                {
+                    myLayout.addView(myView);
+                }
+                else
+                {
+                    long myStartTime2 = System.currentTimeMillis();
+                    Bitmap mBitmap = CommonUtil.convertStringToBitmap(responseProfile.getData());
+
+                    ImageView myImgView = myView.findViewById(R.id.group_members_profile_pic);
+                    myImgView.setImageBitmap(mBitmap);
+                    myLayout.addView(myView);
+                    Log.d("Render time ",String.valueOf(System.currentTimeMillis()-myStartTime2));
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ProfilePhotoResponse> call, Throwable t) {
+                // Log error here since request failed
+                View myView = mInflater.inflate(R.layout.fragment_group_members, null);
+                myLayout.addView(myView);
             }
         });
     }
