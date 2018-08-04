@@ -14,11 +14,10 @@
 
     <LinearLayout
             android:layout_width="wrap_content"
-            android:layout_height="600sp"
+            android:layout_height="500sp"
             android:id="@+id/group_details_grid"
             android:verticalSpacing="5sp"
             android:horizontalSpacing="5sp"
-            android:layout_weight="1"
             android:stretchMode="columnWidth"
             android:layout_gravity="center_horizontal"
 

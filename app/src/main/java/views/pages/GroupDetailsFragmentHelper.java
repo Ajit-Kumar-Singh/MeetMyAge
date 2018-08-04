@@ -68,6 +68,7 @@ public class GroupDetailsFragmentHelper {
             locationB.setLongitude(SessionManagementUtil.getLocation().getLongitude());
 
             distance = locationA.distanceTo(locationB);
+            Log.d("SETTING_LOCATION", mGroupLocation.getCity()+", "+ distance/1000 +"km" );
             myGroupName.setText(mGroupLocation.getCity()+", "+ distance/1000 +"km" );
         }
 
@@ -89,7 +90,8 @@ public class GroupDetailsFragmentHelper {
                 .setThumbnailSize(100)
                 .setZoom(false)
                 .setFragmentManager(fragmentManager)
-                .addMedia(infos);
+                .addMedia(infos)
+                .hideThumbnails();
 
     }
 
@@ -104,7 +106,7 @@ public class GroupDetailsFragmentHelper {
     public void getRecommendGroups(final View pView) {
         ApiInterface apiService =
                 ApiClient.getClient().create(ApiInterface.class);
-
+        pView.setVisibility(View.INVISIBLE);
         Call<RecommendedGroupDetails> call = null;
         Profile myProfile = SessionManagementUtil.getUserData();
         Log.i("LOGGED_IN_PROFILE_ID",String.valueOf(myProfile.getProfileId()));
@@ -115,8 +117,11 @@ public class GroupDetailsFragmentHelper {
             public void onResponse(Call<RecommendedGroupDetails> call, Response<RecommendedGroupDetails> response) {
                 mGroupLocation = response.body().getGroupDetails().getLocation();
                 groupMembers = response.body().getGroupMembers();
+
                 populateDescription(pView);
                 addMembers(pView);
+                addImages(pView);
+                pView.setVisibility(View.VISIBLE);
             }
 
             @Override

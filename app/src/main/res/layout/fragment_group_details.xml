@@ -1,72 +1,72 @@
 <?xml version="1.0" encoding="utf-8"?>
-    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        android:layout_width="wrap_content"
-        android:layout_height="600sp"
-        android:orientation="vertical"
-        android:padding="5sp">
-        <RelativeLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content">
-            <com.veinhorn.scrollgalleryview.ScrollGalleryView
-                android:id="@+id/scroll_gallery_view"
-                android:layout_width="500sp"
-                android:layout_height="300sp"
-                android:background="#000">
-            </com.veinhorn.scrollgalleryview.ScrollGalleryView>
-            <TextView
-                android:text="TextView"
-                android:layout_height="50sp"
-                android:id="@+id/recommended_group_details_distance"
-                android:layout_width="175sp"
-                android:layout_marginTop="2sp"
-                android:layout_alignBottom="@id/scroll_gallery_view"
-                android:gravity="left|bottom"
-                android:layout_gravity="bottom"
-                android:textSize="20sp"
-                android:textStyle="bold"
-                android:textColor="#FFF"
-                android:ellipsize="marquee">
-            </TextView>
-        </RelativeLayout>
-        <HorizontalScrollView
-            android:layout_width="wrap_content"
-            android:layout_height="70sp"
-            android:scrollbars="none">
-            <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/recommendedGroupsMembers"
-                android:orientation="horizontal">
-            </LinearLayout>
-        </HorizontalScrollView>
-        <TextView
-            android:text="TextView"
-            android:layout_height="50sp"
-            android:id="@+id/recommended_group_details_group_name"
-            android:gravity="center"
-            android:layout_width="350sp"
-            android:layout_below="@+id/scroll_gallery_view"
-            android:layout_marginTop="2sp"
-            android:layout_centerHorizontal="true"
-            android:layout_gravity="top|center_horizontal"
-            android:textSize="30sp"
-            android:textStyle="bold"
-            android:ellipsize="marquee"></TextView>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="5sp">
+
+    <com.veinhorn.scrollgalleryview.ScrollGalleryView
+        android:id="@+id/scroll_gallery_view"
+        android:layout_width="400sp"
+        android:layout_height="0px"
+        android:layout_weight="14"
+        android:background="#000"></com.veinhorn.scrollgalleryview.ScrollGalleryView>
+
+
+    <HorizontalScrollView
+        android:layout_width="400sp"
+        android:layout_height="0px"
+        android:layout_weight="3"
+        android:scrollbars="none">
+
+        <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+            android:id="@+id/recommendedGroupsMembers"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal"></LinearLayout>
+    </HorizontalScrollView>
+
+    <TextView
+        android:id="@+id/recommended_group_details_group_name"
+        android:layout_width="400sp"
+        android:layout_height="0px"
+        android:layout_weight="2"
+        android:gravity="center"
+        android:textSize="20sp"
+        android:textStyle="bold"></TextView>
+
+    <TextView
+        android:id="@+id/recommended_group_details_group_desc"
+        android:layout_width="400sp"
+        android:layout_height="0px"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="2sp"
+        android:layout_weight="3"
+        android:ellipsize="marquee"
+        android:inputType="textMultiLine"
+        android:padding="5sp"
+        android:textSize="18sp"></TextView>
+
+    <View
+        android:layout_width="400sp"
+        android:layout_height="2sp" />
+
+    <LinearLayout
+        android:layout_width="400sp"
+        android:layout_height="0px"
+        android:layout_weight="1"
+        android:orientation="horizontal">
+
+        <ImageView
+            android:layout_width="30sp"
+            android:layout_height="match_parent"
+            android:src="@drawable/ic_location_on_black_24dp" />
 
         <TextView
-            android:id="@+id/recommended_group_details_group_desc"
-            android:layout_width="400sp"
-            android:layout_height="100sp"
-            android:inputType="textMultiLine"
-            android:layout_below="@+id/recommended_group_details_group_name"
-            android:layout_centerHorizontal="true"
-            android:layout_marginTop="2sp"
-            android:ellipsize="marquee"
-            android:padding="5sp"
-            android:text="TextView"
+            android:id="@+id/recommended_group_details_distance"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
             android:textSize="18sp"></TextView>
-
-
-
-
     </LinearLayout>
+
+</LinearLayout>
