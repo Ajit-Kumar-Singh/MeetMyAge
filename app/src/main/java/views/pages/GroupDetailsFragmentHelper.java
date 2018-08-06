@@ -1,15 +1,19 @@
 package views.pages;
 
+import android.app.ActionBar;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.location.Location;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.FragmentManager;
 import android.text.Layout;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.HorizontalScrollView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -45,6 +49,10 @@ public class GroupDetailsFragmentHelper {
     LayoutInflater mInflater;
     FragmentManager fragmentManager;
     GroupMembers[] groupMembers;
+    LinearLayout mMembersLayout;
+    HorizontalScrollView mScrollView;
+    Boolean toggle = false;
+    FloatingActionButton mViewGrpMembersButton;
     public GroupDetailsFragmentHelper(long pGroupId, String pGroupName, String pGroupDesc,data.model.Location pGroupLocation , Context pContext, LayoutInflater pInflater, FragmentManager pFragMentManager) {
         mGroupId = pGroupId;
         mGroupName = pGroupName;
@@ -54,11 +62,29 @@ public class GroupDetailsFragmentHelper {
         mInflater = pInflater;
         fragmentManager = pFragMentManager;
     }
-    public void populateDescription(View pView) {
+    public void populateDescription(final View pView) {
         TextView myNameTextView = pView.findViewById(R.id.recommended_group_details_group_name);
         TextView myDescTextView = pView.findViewById(R.id.recommended_group_details_group_desc);
         myNameTextView.setText(mGroupName);
         myDescTextView.setText(mGroupDesc);
+        FloatingActionButton myFloatingButton = pView.findViewById(R.id.group_details_view_members);
+        mViewGrpMembersButton = myFloatingButton;
+        myFloatingButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                LinearLayout myLayout = pView.findViewById(R.id.myLayoutGroupMemberes);
+                if (!toggle) {
+
+                    myLayout.addView(mScrollView);
+                    toggle = !toggle;
+                }
+                else {
+                    myLayout.removeView(mScrollView);
+                    toggle = !toggle;
+
+                }
+            }
+        });
         TextView myGroupName = pView.findViewById(R.id.recommended_group_details_distance);
         float distance = 0.0f;
         if (mGroupLocation != null) {
@@ -101,9 +127,13 @@ public class GroupDetailsFragmentHelper {
     }
 
     public void addMembers(View pView) {
-        LinearLayout myLayout = pView.findViewById(R.id.recommendedGroupsMembers);
-        for (GroupMembers myMember:groupMembers) {
-            fetchProfilePicFromServerAndSaveToBitmap(myMember.getProfileId(),myLayout);
+        HorizontalScrollView myView = (HorizontalScrollView) mInflater.inflate(R.layout.fragment_group_details_hrzntl_scroll,null);
+        LinearLayout myLayout = myView.findViewById(R.id.recommendedGroupsMembers);
+        mScrollView = myView;
+        mMembersLayout = myLayout;
+        FloatingActionButton myFAB = pView.findViewById(R.id.group_details_view_members);
+        for (int i=0;i<groupMembers.length;i++) {
+            fetchProfilePicFromServerAndSaveToBitmap(groupMembers[i].getProfileId(),myLayout,i==groupMembers.length-1 ? false:true);
         }
     }
 
@@ -125,6 +155,7 @@ public class GroupDetailsFragmentHelper {
                 populateDescription(pView);
                 addMembers(pView);
                 addImages(pView);
+
                 pView.setVisibility(View.VISIBLE);
             }
 
@@ -135,7 +166,7 @@ public class GroupDetailsFragmentHelper {
         });
     }
 
-    private void fetchProfilePicFromServerAndSaveToBitmap(int profileID,final LinearLayout myLayout)
+    private void fetchProfilePicFromServerAndSaveToBitmap(int profileID, final LinearLayout myLayout, final boolean isLast)
     {
 
         final long myStartTime = System.currentTimeMillis();
@@ -152,6 +183,7 @@ public class GroupDetailsFragmentHelper {
                 String data = responseProfile.getData();
                 View myView = mInflater.inflate(R.layout.fragment_group_members, null);
                 Log.d("Web service call time ",String.valueOf(System.currentTimeMillis()-myStartTime));
+
                 if (data.isEmpty())
                 {
                     myLayout.addView(myView);
@@ -171,9 +203,17 @@ public class GroupDetailsFragmentHelper {
             @Override
             public void onFailure(Call<ProfilePhotoResponse> call, Throwable t) {
                 // Log error here since request failed
+
                 View myView = mInflater.inflate(R.layout.fragment_group_members, null);
                 myLayout.addView(myView);
             }
         });
+    }
+
+    public  int dpToPx(int dp) {
+        float density = mContext.getResources()
+                .getDisplayMetrics()
+                .density;
+        return Math.round((float) dp * density);
     }
 }
