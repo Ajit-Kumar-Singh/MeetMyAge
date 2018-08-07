@@ -52,4 +52,8 @@ public interface ApiInterface {
     @GET("profiles/{profileId}/recommendedGroups/{groupId}")
     Call<RecommendedGroupDetails> getRecommendedGroupDetails(@Path("profileId") int profileId, @Path("groupId") int groupId);
 
+    @GET("profiles/{profileId}")
+    Call<Profile> getProfileDetailByProfileId(@Path("profileId") int profileId);
+
+
 }

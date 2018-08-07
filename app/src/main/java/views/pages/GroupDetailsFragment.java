@@ -36,7 +36,6 @@ public class GroupDetailsFragment extends Fragment {
         View view =  inflater.inflate(R.layout.fragment_group_details, container, false);
         mInflater = inflater;
         ButterKnife.bind(this,view);
-
         return view;
     }
 }

@@ -124,8 +124,11 @@ public class ProfileFragment extends Fragment {
         mSetting.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Fragment profileDetails = new ProfileSettings();
+//                Fragment profileDetails = new ProfileSettings();
+//                getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.fragment_conatiner, profileDetails).commit();
+                Fragment profileDetails = ProfileDetails.newInstance(SessionManagementUtil.getUserData().getProfileId());
                 getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.fragment_conatiner, profileDetails).commit();
+
             }
         });
 

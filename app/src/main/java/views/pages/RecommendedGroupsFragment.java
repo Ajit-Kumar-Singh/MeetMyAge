@@ -187,7 +187,4 @@ public class RecommendedGroupsFragment extends Fragment {
             }
         });
     }
-
-
-
 }
