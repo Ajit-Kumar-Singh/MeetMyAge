@@ -20,7 +20,9 @@ import java.lang.reflect.Field;
 public class BottomNavigation extends AppCompatActivity implements ProfileFragment.OnFragmentInteractionListener, EditProfileFragment.OnFragmentInteractionListener,
 EventsDetailsFragment.OnFragmentInteractionListener,
 CreateGroupFragment.OnFragmentInteractionListener,
-RecommendedGroupsFragment.OnFragmentInteractionListener
+RecommendedGroupsFragment.OnFragmentInteractionListener,
+ProfileDetails.OnFragmentInteractionListener,
+ProfileSettings.OnFragmentInteractionListener
 {
     private BottomNavigationView bottomNavigationView;
     @Override

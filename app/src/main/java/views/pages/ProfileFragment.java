@@ -20,12 +20,9 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.FileProvider;
 import android.util.Log;
-import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -42,7 +39,6 @@ import butterknife.ButterKnife;
 import data.ApiClient;
 import data.ApiInterface;
 import data.SessionManagementUtil;
-import data.model.Location;
 import data.model.Profile;
 import data.model.ProfilePhotoRequest;
 import data.model.ProfilePhotoResponse;
@@ -70,14 +66,9 @@ public class ProfileFragment extends Fragment {
     @BindView(R.id.emailId) TextView mEmailId;
 
     @BindView(R.id.fab) FloatingActionButton mFab;
+    @BindView(R.id.setting) FloatingActionButton mSetting;
+
     @BindView(R.id.layoutPreview) LinearLayout mLayoutPreview;
-    @BindView(R.id.layoutEdit) LinearLayout mLayoutEdit;
-    @BindView(R.id.saveProfile) Button saveProfile;
-
-    @BindView(R.id.editprofileName) EditText mEditProfileName;
-    @BindView(R.id.editprofileStory) EditText mEditProfileStrory;
-    @BindView (R.id.editprofileWork) EditText mEditProfileWork;
-
     @BindView(R.id.profileImage) ImageView mImageView;
     @BindView(R.id.addPhoto) FloatingActionButton mAddPhoto;
 
@@ -104,23 +95,6 @@ public class ProfileFragment extends Fragment {
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         showPreviewPage();
-        view.setFocusableInTouchMode(true);
-        view.requestFocus();
-        view.setOnKeyListener(new View.OnKeyListener() {
-            @Override
-            public boolean onKey(View v, int keyCode, KeyEvent event) {
-                Log.i(TAG, "keyCode: " + keyCode);
-                if( keyCode == KeyEvent.KEYCODE_BACK && event.getAction() == KeyEvent.ACTION_DOWN) {
-                    if (isPreview)
-                    {
-                        showPreviewPage();
-                    }
-                    return true;
-                }
-                return false;
-            }
-        });
-
         mAddPhoto.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -132,54 +106,36 @@ public class ProfileFragment extends Fragment {
 
     private void showPreviewPage()
     {
-        if (isPreview)
-        {
-            mLayoutEdit.setVisibility(View.GONE);
-            mLayoutPreview.setVisibility(View.VISIBLE);
-            //Set Initial data
-            Profile savedProfile = SessionManagementUtil.getUserData();
-            mProfileName.setText(savedProfile.getProfileName());
-            mProfileStory.setText(savedProfile.getProfileStory());
-            mEmailId.setText(savedProfile.getProfileEmail());
-            mProfileWork.setText(savedProfile.getProfileWork());
-            mProfileCity.setText(savedProfile.getLocation().getCity());
-            isPreview = false;
-            mFab.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    showEditPage();
-                }
-            });
+        Profile savedProfile = SessionManagementUtil.getUserData();
+        mProfileName.setText(savedProfile.getProfileName());
+        mProfileStory.setText(savedProfile.getProfileStory());
+        mEmailId.setText(savedProfile.getProfileEmail());
+        mProfileWork.setText(savedProfile.getProfileWork());
+        mProfileCity.setText(savedProfile.getLocation().getCity());
+        isPreview = false;
+        mFab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Fragment editProfile = new EditProfileFragment();
+                getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.fragment_conatiner, editProfile).commit();
+            }
+        });
 
-            if (mBitmap == null)
-            {
-                fetchProfilePicFromServerAndSaveToBitmap();
+        mSetting.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Fragment profileDetails = new ProfileSettings();
+                getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.fragment_conatiner, profileDetails).commit();
             }
-            else
-            {
-                mImageView.setImageBitmap(mBitmap);
-            }
+        });
+
+        if (mBitmap == null)
+        {
+            fetchProfilePicFromServerAndSaveToBitmap();
         }
-    }
-
-    private void showEditPage()
-    {
-        if (!isPreview)
+        else
         {
-            //Set Initial data
-            Profile savedProfile = SessionManagementUtil.getUserData();
-            mEditProfileName.setText(savedProfile.getProfileName());
-            mEditProfileStrory.setText(savedProfile.getProfileStory());
-            mEditProfileWork.setText(savedProfile.getProfileWork());
-            mLayoutEdit.setVisibility(View.VISIBLE);
-            mLayoutPreview.setVisibility(View.GONE);
-            isPreview =  true;
-            saveProfile.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    updateDataToServer();
-                }
-            });
+            mImageView.setImageBitmap(mBitmap);
         }
     }
 
@@ -222,34 +178,6 @@ public class ProfileFragment extends Fragment {
             }
         });
     }
-
-    private void updateDataToServer()
-    {
-        //Update Data to server
-        ApiInterface apiService =
-                ApiClient.getClient().create(ApiInterface.class);
-
-        Call<Profile> call = null;
-        call = apiService.updateProfile(SessionManagementUtil.getUserData().getProfileId(),
-                new Profile(SessionManagementUtil.getUserData().getProfileId(),mEditProfileName.getText().toString(),mEditProfileStrory.getText().toString(),mEditProfileWork.getText().toString(),new Location()));
-
-        call.enqueue(new Callback<Profile>() {
-            @Override
-            public void onResponse(Call<Profile> call, Response<Profile> response) {
-                Profile responseProfile = response.body();
-                SessionManagementUtil.updateProfile(
-                        responseProfile.getProfileName(),"ajit.sumitsingh@gmail.com",responseProfile.getProfileStory(),responseProfile.getProfileWork());
-                showPreviewPage();
-            }
-
-            @Override
-            public void onFailure(Call<Profile> call, Throwable t) {
-                // Log error here since request failed
-                Log.e(TAG, t.toString());
-            }
-        });
-    }
-
 
     private boolean permissions(List<String> listPermissionsNeeded) {
 

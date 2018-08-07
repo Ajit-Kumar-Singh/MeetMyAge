@@ -1,49 +1,184 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="views.pages.EditProfileFragment"
-    android:background="@color/cardview_light_background">
-
+    android:orientation="vertical"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context="views.pages.EditProfileFragment">
 
     <LinearLayout
+        android:id="@+id/top_sticky_label"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:paddingRight="30dp"
-        android:paddingLeft="30dp">
-
-        <EditText
-            android:id="@+id/profileName"
-            android:layout_width="match_parent"
+        android:layout_alignParentTop="true"
+        >
+        <TextView
+            android:layout_width="fill_parent"
+            android:background="@color/com_facebook_blue"
             android:layout_height="wrap_content"
-            android:ems="10"
-            android:inputType="textPersonName"
-            android:hint="Name"
-            tools:paddingTop="20dp" />
-
-        <EditText
-            android:id="@+id/profileStory"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:ems="10"
-            android:inputType="textPersonName"
-            android:hint="Something about yourself" />
-
-        <EditText
-            android:id="@+id/profileWork"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:ems="10"
-            android:inputType="textPersonName"
-            android:hint="work" />
-
-        <Button
-            android:id="@+id/saveProfile"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Save"
-            android:background="@android:color/holo_green_dark" />
+            android:gravity="center"
+            android:text="EDIT PROFILE"
+            android:textColor="#ffffff"
+            android:textSize="20dp"
+            android:padding="10dp"/>
     </LinearLayout>
-</FrameLayout>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="fill_parent"
+        android:layout_below="@id/top_sticky_label"
+        android:paddingBottom="10dp"
+        android:fillViewport="true"
+        android:background="#F5F5F5">
+
+        <LinearLayout
+            android:id="@+id/layoutEdit"
+            android:layout_width="match_parent"
+            android:layout_height="107dp"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/textView12"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="15dp"
+                android:layout_marginRight="5dp"
+                android:layout_marginTop="10dp"
+                android:text="ADD UPTO FIVE FEATURED PHOTOS"
+                android:textSize="15sp" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="120dp"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:id="@+id/gallaryPicFirst"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="10sp"
+                    android:layout_weight="1"
+                    android:src="@drawable/com_facebook_profile_picture_blank_square" />
+
+                <ImageView
+                    android:id="@+id/gallaryPicSecond"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="10sp"
+                    android:layout_weight="1"
+                    android:src="@drawable/com_facebook_profile_picture_blank_square" />
+
+                <ImageView
+                    android:id="@+id/gallaryPicThird"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="10sp"
+                    android:layout_weight="1"
+                    android:src="@drawable/com_facebook_profile_picture_blank_square" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="120dp"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:id="@+id/gallaryPicFourth"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="10sp"
+                    android:layout_weight="1"
+                    android:src="@drawable/com_facebook_profile_picture_blank_square" />
+
+                <ImageView
+                    android:id="@+id/gallaryPicFifth"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="10sp"
+                    android:layout_weight="1"
+                    android:src="@drawable/com_facebook_profile_picture_blank_square" />
+
+                <TextView
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1" />
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/textView11"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:text="NAME"
+                android:layout_marginLeft="15dp"
+                android:layout_marginRight="15dp"
+                android:textSize="20sp"/>
+
+            <EditText
+                android:id="@+id/editprofileName"
+                android:layout_width="match_parent"
+                android:layout_height="45dp"
+                android:layout_marginTop="2dp"
+                android:background="#ffffff"
+                android:ems="10"
+                android:paddingStart="10dp"
+                android:inputType="textPersonName" />
+
+            <TextView
+                android:id="@+id/textView10"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="15dp"
+                android:layout_marginRight="15dp"
+                android:layout_marginTop="20dp"
+                android:textSize="20sp"
+                android:text="ABOUT ME" />
+
+            <EditText
+                android:id="@+id/editprofileStory"
+                android:layout_width="match_parent"
+                android:layout_height="45dp"
+                android:layout_marginTop="2dp"
+                android:background="#ffffff"
+                android:ems="10"
+                android:paddingStart="10dp"
+                android:inputType="textPersonName" />
+
+            <TextView
+                android:id="@+id/textView9"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="15dp"
+                android:layout_marginRight="5dp"
+                android:layout_marginTop="10dp"
+                android:textSize="20sp"
+                android:text="WORK" />
+
+            <EditText
+                android:id="@+id/editprofileWork"
+                android:layout_width="match_parent"
+                android:layout_height="45dp"
+                android:paddingStart="10dp"
+                android:layout_marginTop="2dp"
+                android:background="#ffffff"
+                android:ems="10"
+                android:inputType="textPersonName" />
+
+            <Button
+                android:id="@+id/saveProfile"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="5dp"
+                android:layout_marginRight="5dp"
+                android:layout_marginTop="10dp"
+                android:background="#ffffff"
+                android:text="Save" />
+            <View
+                android:layout_width = "match_parent"
+                android:layout_height = "50dp" />
+        </LinearLayout>
+
+    </ScrollView>
+</RelativeLayout>
