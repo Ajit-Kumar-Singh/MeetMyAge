@@ -45,6 +45,7 @@ public class RecommendedGroupsFragment extends Fragment {
     private Bundle mBundle;
     Iterator<Group> mIterator;
     View mGroupDetailsView;
+    Group myCurrentGroup;
     public RecommendedGroupsFragment() {
         // Required empty public constructor
     }
@@ -64,10 +65,21 @@ public class RecommendedGroupsFragment extends Fragment {
         ButterKnife.bind(this,mGroupDetailsView);
         mGroupDetailsGrid= mGroupDetailsView.findViewById(R.id.group_details_grid);
         mProgressDialog = mGroupDetailsView.findViewById(R.id.group_details_progress);
-        mProgressDialog.setVisibility(View.VISIBLE);
-        mInflater = inflater;
 
-        getRecommendGroups();
+        mInflater = inflater;
+        Log.d("RENDERING AGAIN", "onCreateView: rendering aain");
+
+        if (myCurrentGroup != null) {
+            mProgressDialog.setVisibility(View.GONE);
+            Log.d("RENDERING AGAIN", myCurrentGroup.getGroupName());
+            addGroupDetails(myCurrentGroup);
+            addGroupNav(mGroupDetailsView);
+        }
+
+        else {
+            mProgressDialog.setVisibility(View.VISIBLE);
+            getRecommendGroups();
+        }
         return mGroupDetailsView;
     }
 
@@ -104,7 +116,7 @@ public class RecommendedGroupsFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 if (mIterator.hasNext()) {
-                    Group myCurrentGroup = mIterator.next();
+                    myCurrentGroup = mIterator.next();
                     if (myCurrentGroup != null) {
                         addGroupDetails(myCurrentGroup);
                     }
@@ -117,7 +129,7 @@ public class RecommendedGroupsFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 if (mIterator.hasNext()) {
-                    Group myCurrentGroup = mIterator.next();
+                    myCurrentGroup = mIterator.next();
                     if (myCurrentGroup != null) {
                         addGroupDetailsReject(myCurrentGroup);
                     }
@@ -173,7 +185,7 @@ public class RecommendedGroupsFragment extends Fragment {
                 mProgressDialog.setVisibility(View.GONE);
                 mIterator = mRecommendedGroups.iterator();
                 if (mIterator.hasNext()) {
-                    Group myCurrentGroup = mIterator.next();
+                    myCurrentGroup = mIterator.next();
                     if (myCurrentGroup != null) {
                         addGroupDetails(myCurrentGroup);
                     }
