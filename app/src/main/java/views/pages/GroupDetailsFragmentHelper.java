@@ -35,6 +35,7 @@ import data.model.Profile;
 import data.model.ProfilePhotoResponse;
 import data.model.gmaps.GroupMembers;
 import data.model.gmaps.RecommendedGroupDetails;
+import de.hdodenhof.circleimageview.CircleImageView;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -133,7 +134,7 @@ public class GroupDetailsFragmentHelper {
         mMembersLayout = myLayout;
         FloatingActionButton myFAB = pView.findViewById(R.id.group_details_view_members);
         for (int i=0;i<groupMembers.length;i++) {
-            fetchProfilePicFromServerAndSaveToBitmap(groupMembers[i].getProfileId(),myLayout,i==groupMembers.length-1 ? false:true);
+            fetchProfilePicFromServerAndSaveToBitmap(groupMembers[i].getProfileId(),groupMembers[i].getProfile(),myLayout,i==groupMembers.length-1 ? false:true);
         }
     }
 
@@ -166,7 +167,7 @@ public class GroupDetailsFragmentHelper {
         });
     }
 
-    private void fetchProfilePicFromServerAndSaveToBitmap(int profileID, final LinearLayout myLayout, final boolean isLast)
+    private void fetchProfilePicFromServerAndSaveToBitmap(final int profileID,final Profile pProfile, final LinearLayout myLayout, final boolean isLast)
     {
 
         final long myStartTime = System.currentTimeMillis();
@@ -180,7 +181,7 @@ public class GroupDetailsFragmentHelper {
             @Override
             public void onResponse(Call<ProfilePhotoResponse> call, Response<ProfilePhotoResponse> response) {
                 ProfilePhotoResponse responseProfile = response.body();
-                String data = responseProfile.getData();
+                final String data = responseProfile.getData();
                 View myView = mInflater.inflate(R.layout.fragment_group_members, null);
                 Log.d("Web service call time ",String.valueOf(System.currentTimeMillis()-myStartTime));
 
@@ -198,6 +199,15 @@ public class GroupDetailsFragmentHelper {
                     myLayout.addView(myView);
                     Log.d("Render time ",String.valueOf(System.currentTimeMillis()-myStartTime2));
                 }
+
+                CircleImageView myImgView = myView.findViewById(R.id.group_members_profile_pic);
+                myImgView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                            ProfileDetails myProfileDetails = ProfileDetails.newInstance(pProfile,data);
+                            fragmentManager.beginTransaction().replace(R.id.fragment_conatiner, myProfileDetails).addToBackStack("fragment_recommended_groups").commit();
+                    }
+                });
             }
 
             @Override
@@ -205,6 +215,14 @@ public class GroupDetailsFragmentHelper {
                 // Log error here since request failed
 
                 View myView = mInflater.inflate(R.layout.fragment_group_members, null);
+                CircleImageView myImgView = myView.findViewById(R.id.group_members_profile_pic);
+                myImgView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        ProfileDetails myProfileDetails = ProfileDetails.newInstance(pProfile,null);
+                        fragmentManager.beginTransaction().replace(R.id.fragment_conatiner, myProfileDetails).addToBackStack("fragment_recommended_groups").commit();
+                    }
+                });
                 myLayout.addView(myView);
             }
         });

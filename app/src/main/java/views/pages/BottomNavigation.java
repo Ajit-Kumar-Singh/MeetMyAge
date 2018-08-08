@@ -43,7 +43,7 @@ ProfileSettings.OnFragmentInteractionListener
                             case R.id.groups:
                                 item.setCheckable(true);
                                 Fragment groupsFragment = new RecommendedGroupsFragment();
-                                getSupportFragmentManager().beginTransaction().replace(R.id.fragment_conatiner, groupsFragment).commit();
+                                getSupportFragmentManager().beginTransaction().replace(R.id.fragment_conatiner, groupsFragment).addToBackStack("rootStack").commit();
                                 break;
                             case R.id.addGroup:
                                 item.setCheckable(true);
