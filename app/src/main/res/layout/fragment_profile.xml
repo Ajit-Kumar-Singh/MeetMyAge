@@ -24,21 +24,18 @@
             android:id="@+id/addPhoto"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignEnd="@+id/profileImage"
             android:layout_alignParentBottom="true"
-            android:layout_alignRight="@+id/profileImage"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
             android:layout_gravity="top|center_horizontal"
             android:layout_marginBottom="12dp"
-            android:src="@mipmap/ic_add_profile_pic_foreground"
-            app:backgroundTint="#dedede" />
+            android:layout_marginEnd="97dp"
+            android:layout_marginRight="97dp"
+            android:src="@drawable/ic_add_profile_mma_24dp"
+            app:backgroundTint="#ffffff"
+            app:borderWidth="0dp" />
+
     </RelativeLayout>
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:layout_marginTop="12dp"
-        android:layout_marginLeft="20dp"
-        android:layout_marginRight="20dp"
-        android:background="@color/mma_theme" />
     <LinearLayout
         android:id="@+id/layoutPreview"
         android:layout_width="match_parent"
@@ -51,6 +48,14 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center_horizontal" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginTop="12dp"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:background="@color/mma_theme" />
 
         <TextView
             android:id="@+id/city"
@@ -107,12 +112,13 @@
 
                 <android.support.design.widget.FloatingActionButton
                     android:id="@+id/setting"
+                    app:borderWidth="0dp"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="top|center_horizontal"
                     android:layout_margin="@dimen/fab_margin"
                     android:src="@drawable/ic_settings_black_24dp"
-                    app:backgroundTint="#dedede" />
+                    app:backgroundTint="#ffffff" />
             </LinearLayout>
 
             <LinearLayout
@@ -129,7 +135,7 @@
                     android:layout_gravity="top|center_horizontal"
                     android:layout_margin="@dimen/fab_margin"
                     android:src="@drawable/ic_mode_edit_black_24dp"
-                    app:backgroundTint="#dedede" />
+                    app:backgroundTint="#ffffff"  />
             </LinearLayout>
 
             <LinearLayout
@@ -146,7 +152,7 @@
                     android:layout_gravity="top|center_horizontal"
                     android:layout_margin="@dimen/fab_margin"
                     android:src="@drawable/ic_notifications_black_24dp"
-                    app:backgroundTint="#dedede" />
+                    app:backgroundTint="#ffffff"  />
             </LinearLayout>
         </LinearLayout>
     </LinearLayout>
