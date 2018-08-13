@@ -52,10 +52,8 @@ import static com.facebook.FacebookSdk.getApplicationContext;
 // Managing the Profile in this class
 public class ProfileFragment extends Fragment {
 
-    private static Bitmap mBitmap = null;
     private OnFragmentInteractionListener mListener;
     private String TAG = ProfileFragment.class.getSimpleName();
-    private boolean isPreview = true;
     private String mImagePath;
     private Uri mCommonUri;
 
@@ -94,7 +92,7 @@ public class ProfileFragment extends Fragment {
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-        showPreviewPage();
+        initializeProfilePage();
         mAddPhoto.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -104,7 +102,7 @@ public class ProfileFragment extends Fragment {
     }
 
 
-    private void showPreviewPage()
+    private void initializeProfilePage()
     {
         Profile savedProfile = SessionManagementUtil.getUserData();
         mProfileName.setText(savedProfile.getProfileName());
@@ -112,7 +110,6 @@ public class ProfileFragment extends Fragment {
         mEmailId.setText(savedProfile.getProfileEmail());
         mProfileWork.setText(savedProfile.getProfileWork());
         mProfileCity.setText(savedProfile.getLocation().getCity());
-        isPreview = false;
         mFab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -124,21 +121,18 @@ public class ProfileFragment extends Fragment {
         mSetting.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-//                Fragment profileDetails = new ProfileSettings();
-////                getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.fragment_conatiner, profileDetails).commit();
-//                Fragment profileDetails = ProfileDetails.newInstance(SessionManagementUtil.getUserData());
-//                getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.fragment_conatiner, profileDetails).commit();
 
             }
         });
 
-        if (mBitmap == null)
+        Bitmap profileBitmap = ((BottomNavigation)getActivity()).getBitmap();
+        if (profileBitmap == null)
         {
             fetchProfilePicFromServerAndSaveToBitmap();
         }
         else
         {
-            mImageView.setImageBitmap(mBitmap);
+            mImageView.setImageBitmap(profileBitmap);
         }
     }
 
@@ -166,8 +160,10 @@ public class ProfileFragment extends Fragment {
                 }
                 else
                 {
-                    mBitmap = CommonUtil.convertStringToBitmap(responseProfile.getData());
-                    mImageView.setImageBitmap(mBitmap);
+                    Bitmap profileBitmap = null;
+                    profileBitmap = CommonUtil.convertStringToBitmap(responseProfile.getData());
+                    mImageView.setImageBitmap(profileBitmap);
+                    ((BottomNavigation)getActivity()).setBitmap(profileBitmap);
                 }
                 mProgressDialog.hide();
             }
@@ -182,21 +178,11 @@ public class ProfileFragment extends Fragment {
         });
     }
 
-    private boolean permissions(List<String> listPermissionsNeeded) {
-
-        if (!listPermissionsNeeded.isEmpty()) {
-            ActivityCompat.requestPermissions(getActivity(), listPermissionsNeeded.toArray
-                    (new String[listPermissionsNeeded.size()]), CommonUtil.REQUEST_ID_MULTIPLE_PERMISSIONS);
-            return false;
-        }
-        return true;
-    }
-
     public void openImagePicker()
     {
         List<String> permissionList = CommonUtil.checkAndRequestPermissions(getApplicationContext());
         final Fragment frag = this;
-        if (permissions(permissionList)) {
+        if (CommonUtil.permissions(permissionList, getActivity())) {
             final CharSequence[] options = { "Take Photo", "Choose from Gallery","Cancel" };
             AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
             builder.setTitle("Add Photo!");
@@ -234,7 +220,8 @@ public class ProfileFragment extends Fragment {
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        Drawable drawable = null;
+
+        // For gallery we get the data
         if (resultCode == RESULT_OK) {
             if (requestCode == 2) {
                 Uri selectedImage = data.getData();
@@ -246,22 +233,21 @@ public class ProfileFragment extends Fragment {
                 c.close();
             }
         }
-        convertPathToBitmap();
-        mImageView.setImageBitmap(mBitmap);
-        saveImageProfilePicToServer();
-    }
 
-    private void convertPathToBitmap()
-    {
         BitmapFactory.Options bmOptions = new BitmapFactory.Options();
-        mBitmap = BitmapFactory.decodeFile(mImagePath, bmOptions);
+        Bitmap profileBitmap = BitmapFactory.decodeFile(mImagePath, bmOptions);
+        mImageView.setImageBitmap(profileBitmap);
+        saveImageProfilePicToServer();
     }
 
     private void saveImageProfilePicToServer()
     {
-        if (mBitmap != null)
+        BitmapFactory.Options bmOptions = new BitmapFactory.Options();
+        Bitmap profileBitmap = BitmapFactory.decodeFile(mImagePath, bmOptions);
+
+        if (profileBitmap != null)
         {
-            String base64String = CommonUtil.encodeImage(mBitmap);
+            String base64String = CommonUtil.encodeImage(profileBitmap);
             //Update Data to server
             ApiInterface apiService =
                     ApiClient.getClient().create(ApiInterface.class);

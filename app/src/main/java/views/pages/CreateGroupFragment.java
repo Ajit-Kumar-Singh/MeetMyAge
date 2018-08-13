@@ -7,8 +7,10 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
+import android.graphics.drawable.GradientDrawable;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -81,7 +83,7 @@ public class CreateGroupFragment extends Fragment {
 		// Inflate the layout for this fragment
 		View view =  inflater.inflate(R.layout.fragment_create_group, container, false);
 		ButterKnife.bind(this,view);
-
+		createAndAddDrawable();
 		mGrpImage.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View view) {
@@ -97,21 +99,11 @@ public class CreateGroupFragment extends Fragment {
 		return view;
 	}
 
-	private boolean permissions(List<String> listPermissionsNeeded) {
-
-		if (!listPermissionsNeeded.isEmpty()) {
-			ActivityCompat.requestPermissions(getActivity(), listPermissionsNeeded.toArray
-					(new String[listPermissionsNeeded.size()]), CommonUtil.REQUEST_ID_MULTIPLE_PERMISSIONS);
-			return false;
-		}
-		return true;
-	}
-
 	public void openImagePicker()
 	{
 		List<String> permissionList = CommonUtil.checkAndRequestPermissions(getApplicationContext());
 		final Fragment frag = this;
-		if (permissions(permissionList)) {
+		if (CommonUtil.permissions(permissionList, getActivity())) {
 			final CharSequence[] options = { "Take Photo", "Choose from Gallery","Cancel" };
 			AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
 			builder.setTitle("Add Photo!");
@@ -146,6 +138,16 @@ public class CreateGroupFragment extends Fragment {
 		}
 	}
 
+	private void createAndAddDrawable()
+	{
+		GradientDrawable drawable = new GradientDrawable();
+		drawable.setShape(GradientDrawable.RECTANGLE);
+		drawable.setStroke(3, Color.parseColor("#8E24AA"));
+		drawable.setCornerRadius(8);
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+			mSaveGroup.setBackground(drawable);
+		}
+	}
 	@Override
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
 		if (resultCode == RESULT_OK) {

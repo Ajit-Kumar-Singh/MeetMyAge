@@ -3,6 +3,7 @@ package views.pages;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -25,6 +26,17 @@ ProfileDetails.OnFragmentInteractionListener,
 ProfileSettings.OnFragmentInteractionListener
 {
     private BottomNavigationView bottomNavigationView;
+
+    public Bitmap getBitmap() {
+        return mBitmap;
+    }
+
+    public void setBitmap(Bitmap mBitmap) {
+        this.mBitmap = mBitmap;
+    }
+
+    private Bitmap mBitmap = null;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

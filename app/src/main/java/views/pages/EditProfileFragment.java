@@ -97,7 +97,7 @@ public class EditProfileFragment extends Fragment {
     {
         GradientDrawable drawable = new GradientDrawable();
         drawable.setShape(GradientDrawable.RECTANGLE);
-        drawable.setStroke(3, Color.BLACK);
+        drawable.setStroke(3, Color.parseColor("#8E24AA"));
         drawable.setCornerRadius(8);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
             saveProfile.setBackground(drawable);
