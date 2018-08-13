@@ -6,15 +6,16 @@
     android:layout_height="match_parent"
     android:background="@color/cardview_light_background"
     android:orientation="vertical">
+
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="250dp">
+        android:layout_height="222dp">
 
         <de.hdodenhof.circleimageview.CircleImageView
             android:id="@+id/profileImage"
             android:layout_width="160dp"
             android:layout_height="160dp"
-            android:layout_alignParentBottom="true"
+            android:layout_alignBottom="@+id/addPhoto"
             android:layout_centerHorizontal="true"
             android:layout_gravity="top|center_horizontal"
             android:background="@drawable/circle"
@@ -40,6 +41,7 @@
         android:id="@+id/layoutPreview"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_margin="20dp"
         android:orientation="vertical">
 
         <TextView
@@ -52,48 +54,93 @@
         <View
             android:layout_width="match_parent"
             android:layout_height="1dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
             android:layout_marginTop="12dp"
-            android:layout_marginLeft="20dp"
-            android:layout_marginRight="20dp"
+            android:layout_marginBottom="10dp"
             android:background="@color/mma_theme" />
 
-        <TextView
-            android:id="@+id/city"
-            style="@style/MMA_TextContent"
+        <RelativeLayout
+            android:id="@+id/cityLayout"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:gravity="center_horizontal" />
+            android:layout_height="wrap_content">
 
-        <TextView
-            android:id="@+id/profileWork"
-            style="@style/MMA_TextContent"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:gravity="center_horizontal" />
+            <ImageButton
+                android:id="@+id/imageButton2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/com_facebook_auth_dialog_background"
+                app:srcCompat="@drawable/ic_location_city_24dp" />
 
-        <TextView
-            android:id="@+id/profileStory"
-            style="@style/MMA_TextContent"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:gravity="center_horizontal" />
+            <TextView
+                android:id="@+id/city"
+                style="@style/MMA_TextContent"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="10dp"
+                android:layout_toRightOf="@+id/imageButton2" />
+        </RelativeLayout>
 
-        <TextView
-            android:id="@+id/emailId"
-            style="@style/MMA_TextContent"
+        <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:gravity="center_horizontal" />
+            android:layout_alignBottom="@+id/cityLayout">
+            <ImageButton
+                android:id="@+id/imageButton3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/com_facebook_auth_dialog_background"
+                app:srcCompat="@drawable/ic_location_city_24dp" />
+            <TextView
+                android:id="@+id/profileWork"
+                style="@style/MMA_TextContent"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_toRightOf="@+id/imageButton3"/>
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <ImageButton
+                android:id="@+id/imageButton4"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/com_facebook_auth_dialog_background"
+                app:srcCompat="@drawable/ic_location_city_24dp" />
+            <TextView
+                android:id="@+id/profileStory"
+                style="@style/MMA_TextContent"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_toRightOf="@+id/imageButton4"
+                />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <ImageButton
+                android:id="@+id/imageButton5"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/com_facebook_auth_dialog_background"
+                app:srcCompat="@drawable/ic_location_city_24dp" />
+            <TextView
+                android:id="@+id/emailId"
+                style="@style/MMA_TextContent"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="8dp"
+                android:layout_toRightOf="@+id/imageButton5"/>
+        </RelativeLayout>
 
         <View
             android:layout_width="match_parent"
             android:layout_height="1dp"
-            android:layout_marginLeft="20dp"
-            android:layout_marginRight="20dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
             android:background="@color/mma_theme" />
 
         <LinearLayout
