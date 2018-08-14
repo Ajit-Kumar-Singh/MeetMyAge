@@ -71,6 +71,7 @@
             android:name="views.pages.BottomNavigation"
             android:label="@string/title_activity_main2"
             android:exported="true"
+            android:windowSoftInputMode="adjustPan"
             android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
 

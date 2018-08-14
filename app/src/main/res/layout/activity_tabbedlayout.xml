@@ -5,6 +5,7 @@
     android:id="@+id/bottom_navigation"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:animateLayoutChanges="true"
     tools:context="views.pages.BottomNavigation">
     <android.support.design.widget.BottomNavigationView
         android:id="@+id/default_bottom_navigation"

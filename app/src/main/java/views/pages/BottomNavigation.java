@@ -4,15 +4,20 @@ import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.graphics.Bitmap;
+import android.graphics.Rect;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.RequiresApi;
 import android.support.design.internal.BottomNavigationItemView;
 import android.support.design.internal.BottomNavigationMenuView;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
+import android.view.View;
+import android.view.ViewTreeObserver;
 
 import com.meetmyage.com.meetmyageapp.R;
 
@@ -25,18 +30,9 @@ RecommendedGroupsFragment.OnFragmentInteractionListener,
 ProfileDetails.OnFragmentInteractionListener,
 ProfileSettings.OnFragmentInteractionListener
 {
-    private BottomNavigationView bottomNavigationView;
-
-    public Bitmap getBitmap() {
-        return mBitmap;
-    }
-
-    public void setBitmap(Bitmap mBitmap) {
-        this.mBitmap = mBitmap;
-    }
-
     private Bitmap mBitmap = null;
-
+    private BottomNavigationView bottomNavigationView;
+    private boolean mKeyboardVisible = false;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -77,6 +73,56 @@ ProfileSettings.OnFragmentInteractionListener
                     }
                 });
     }
+    @Override
+    protected void onResume() {
+        super.onResume();
+        getBottomNavigationView().getViewTreeObserver()
+                .addOnGlobalLayoutListener(mLayoutKeyboardVisibilityListener);
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
+    @Override
+    protected void onPause() {
+        super.onPause();
+        getBottomNavigationView().getViewTreeObserver()
+                .removeOnGlobalLayoutListener(mLayoutKeyboardVisibilityListener);
+    }
+
+    private final ViewTreeObserver.OnGlobalLayoutListener mLayoutKeyboardVisibilityListener =
+            new ViewTreeObserver.OnGlobalLayoutListener() {
+                @Override
+                public void onGlobalLayout() {
+                    final Rect rectangle = new Rect();
+                    View contentView = getBottomNavigationView();
+                    contentView.getWindowVisibleDisplayFrame(rectangle);
+                    int screenHeight = contentView.getRootView().getHeight();
+
+                    // r.bottom is the position above soft keypad or device button.
+                    // If keypad is shown, the rectangle.bottom is smaller than that before.
+                    int keypadHeight = screenHeight - rectangle.bottom;
+                    // 0.15 ratio is perhaps enough to determine keypad height.
+                    boolean isKeyboardNowVisible = keypadHeight > screenHeight * 0.15;
+
+                    if (mKeyboardVisible != isKeyboardNowVisible) {
+                        if (isKeyboardNowVisible) {
+                            onKeyboardShown();
+                        } else {
+                            onKeyboardHidden();
+                        }
+                    }
+
+                    mKeyboardVisible = isKeyboardNowVisible;
+                    }
+                };
+
+
+    private void onKeyboardShown() {
+        getBottomNavigationView().setVisibility(View.GONE);
+    }
+
+    private void onKeyboardHidden() {
+        getBottomNavigationView().setVisibility(View.VISIBLE);
+    }
 
     private void loadDefaultFragment()
     {
@@ -96,6 +142,25 @@ ProfileSettings.OnFragmentInteractionListener
     public void onPointerCaptureChanged(boolean hasCapture) {
         //Empty for now used for interaction
     }
+
+
+    public BottomNavigationView getBottomNavigationView() {
+        return bottomNavigationView;
+    }
+
+    public void setBottomNavigationView(BottomNavigationView bottomNavigationView) {
+        this.bottomNavigationView = bottomNavigationView;
+    }
+
+
+    public Bitmap getBitmap() {
+        return mBitmap;
+    }
+
+    public void setBitmap(Bitmap mBitmap) {
+        this.mBitmap = mBitmap;
+    }
+
 
     @SuppressLint("RestrictedApi")
     private void disableShiftMode(BottomNavigationView view) {

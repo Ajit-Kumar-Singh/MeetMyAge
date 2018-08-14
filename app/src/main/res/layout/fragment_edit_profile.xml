@@ -45,7 +45,7 @@
                 android:layout_marginLeft="15dp"
                 android:layout_marginRight="5dp"
                 android:layout_marginTop="10dp"
-                android:text="ADD UPTO FIVE FEATURED PHOTOS"
+                android:text="Add upto five featured photots"
                 style="@style/MMA_TextContent" />
 
             <LinearLayout
@@ -111,7 +111,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="20dp"
-                android:text="NAME"
+                android:text="Name"
                 android:layout_marginLeft="15dp"
                 android:layout_marginRight="15dp"
                 style="@style/MMA_TextContent"/>
@@ -135,7 +135,7 @@
                 android:layout_marginRight="15dp"
                 android:layout_marginTop="20dp"
                 style="@style/MMA_TextContent"
-                android:text="ABOUT ME" />
+                android:text="Write something about yourself" />
 
             <EditText
                 android:id="@+id/editprofileStory"
@@ -157,7 +157,7 @@
                 android:layout_marginRight="5dp"
                 android:layout_marginTop="10dp"
                 android:textSize="20sp"
-                android:text="WORK" />
+                android:text="Work" />
 
             <EditText
                 android:id="@+id/editprofileWork"
@@ -178,7 +178,7 @@
                 android:layout_marginRight="5dp"
                 android:layout_marginTop="10dp"
                 android:background="#ffffff"
-                style="@style/MMA_TextTitle"
+                style="@style/MMA_Heading"
                 android:text="Save" />
             <View
                 android:layout_width = "match_parent"

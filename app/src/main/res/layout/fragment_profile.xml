@@ -9,7 +9,7 @@
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="222dp">
+        android:layout_height="201dp">
 
         <de.hdodenhof.circleimageview.CircleImageView
             android:id="@+id/profileImage"
@@ -63,12 +63,15 @@
         <RelativeLayout
             android:id="@+id/cityLayout"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            android:layout_marginTop="8dp">
 
             <ImageButton
                 android:id="@+id/imageButton2"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginRight="14dp"
                 android:background="@drawable/com_facebook_auth_dialog_background"
                 app:srcCompat="@drawable/ic_location_city_24dp" />
 
@@ -77,20 +80,21 @@
                 style="@style/MMA_TextContent"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginRight="10dp"
                 android:layout_toRightOf="@+id/imageButton2" />
         </RelativeLayout>
 
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
             android:layout_alignBottom="@+id/cityLayout">
             <ImageButton
                 android:id="@+id/imageButton3"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginRight="14dp"
                 android:background="@drawable/com_facebook_auth_dialog_background"
-                app:srcCompat="@drawable/ic_location_city_24dp" />
+                app:srcCompat="@drawable/ic_work_mma_24dp" />
             <TextView
                 android:id="@+id/profileWork"
                 style="@style/MMA_TextContent"
@@ -102,13 +106,15 @@
 
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp">
             <ImageButton
                 android:id="@+id/imageButton4"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginRight="14dp"
                 android:background="@drawable/com_facebook_auth_dialog_background"
-                app:srcCompat="@drawable/ic_location_city_24dp" />
+                app:srcCompat="@drawable/ic_description_mma_24dp" />
             <TextView
                 android:id="@+id/profileStory"
                 style="@style/MMA_TextContent"
@@ -120,19 +126,20 @@
 
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp">
             <ImageButton
                 android:id="@+id/imageButton5"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginRight="14dp"
                 android:background="@drawable/com_facebook_auth_dialog_background"
-                app:srcCompat="@drawable/ic_location_city_24dp" />
+                app:srcCompat="@drawable/ic_email_mma_24dp" />
             <TextView
                 android:id="@+id/emailId"
                 style="@style/MMA_TextContent"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginRight="8dp"
                 android:layout_toRightOf="@+id/imageButton5"/>
         </RelativeLayout>
 
