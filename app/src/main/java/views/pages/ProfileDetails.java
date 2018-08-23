@@ -161,8 +161,6 @@ public class ProfileDetails extends Fragment {
         mProfileName.setText(profile.getProfileName());
         mProfileStory.setText(profile.getProfileStory());
         mProfileWork.setText(profile.getProfileWork());
-
-
         Bitmap bitmap = CommonUtil.convertStringToBitmap(mProfileImageInString);
         mProfileImage.setImageBitmap(bitmap);
 

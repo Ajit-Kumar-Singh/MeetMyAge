@@ -25,6 +25,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.Toast;
 
@@ -63,6 +64,9 @@ public class CreateGroupFragment extends Fragment {
 	@BindView(R.id.saveGroup)
 	Button mSaveGroup;
 
+	@BindView(R.id.addMember)
+	ImageButton mAddMember;
+
 	private Uri mCommonUri;
 	private OnFragmentInteractionListener mListener;
 
@@ -90,13 +94,27 @@ public class CreateGroupFragment extends Fragment {
 				openImagePicker();
 			}
 		});
+
 		mSaveGroup.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View view) {
 				saveGroupDataToServer();
 			}
 		});
+		mAddMember.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View view) {
+				openAddGroupMemberFragment();
+			}
+		});
+
 		return view;
+	}
+
+	private void openAddGroupMemberFragment()
+	{
+		Fragment addGroupMemberFragment = new JoinedGroupMembers();
+		getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.fragment_conatiner, addGroupMemberFragment).commit();
 	}
 
 	public void openImagePicker()

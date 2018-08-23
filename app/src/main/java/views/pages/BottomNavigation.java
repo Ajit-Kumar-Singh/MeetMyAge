@@ -28,7 +28,8 @@ EventsDetailsFragment.OnFragmentInteractionListener,
 CreateGroupFragment.OnFragmentInteractionListener,
 RecommendedGroupsFragment.OnFragmentInteractionListener,
 ProfileDetails.OnFragmentInteractionListener,
-ProfileSettings.OnFragmentInteractionListener
+ProfileSettings.OnFragmentInteractionListener,
+JoinedGroupMembers.OnListFragmentInteractionListener
 {
     private Bitmap mBitmap = null;
     private BottomNavigationView bottomNavigationView;
@@ -181,5 +182,10 @@ ProfileSettings.OnFragmentInteractionListener
         } catch (NoSuchFieldException e) {
         } catch (IllegalAccessException e) {
         }
+    }
+
+    @Override
+    public void onListFragmentInteraction(JoinedGroupMemberDetail.DummyItem item) {
+
     }
 }
