@@ -1,18 +1,14 @@
 package views.pages;
 
-import android.app.ActionBar;
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.location.Location;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.FragmentManager;
-import android.text.Layout;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.HorizontalScrollView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -30,7 +26,6 @@ import Util.CommonUtil;
 import data.ApiClient;
 import data.ApiInterface;
 import data.SessionManagementUtil;
-import data.model.Group;
 import data.model.Profile;
 import data.model.ProfilePhotoResponse;
 import data.model.gmaps.GroupMembers;

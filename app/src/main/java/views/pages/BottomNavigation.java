@@ -29,7 +29,8 @@ CreateGroupFragment.OnFragmentInteractionListener,
 RecommendedGroupsFragment.OnFragmentInteractionListener,
 ProfileDetails.OnFragmentInteractionListener,
 ProfileSettings.OnFragmentInteractionListener,
-JoinedGroupMembers.OnListFragmentInteractionListener
+JoinedGroupMembers.OnListFragmentInteractionListener,
+GroupEventsFragment.OnListFragmentInteractionListener
 {
     private Bitmap mBitmap = null;
     private BottomNavigationView bottomNavigationView;
@@ -61,7 +62,7 @@ JoinedGroupMembers.OnListFragmentInteractionListener
                                 break;
                             case R.id.events:
                                 item.setCheckable(true);
-                                Fragment eventFragment= new EventsDetailsFragment();
+                                Fragment eventFragment= new GroupEventsFragment();
                                 getSupportFragmentManager().beginTransaction().replace(R.id.fragment_conatiner, eventFragment).commit();
                                 break;
                             case R.id.profile:
@@ -111,7 +112,6 @@ JoinedGroupMembers.OnListFragmentInteractionListener
                             onKeyboardHidden();
                         }
                     }
-
                     mKeyboardVisible = isKeyboardNowVisible;
                     }
                 };
@@ -186,6 +186,11 @@ JoinedGroupMembers.OnListFragmentInteractionListener
 
     @Override
     public void onListFragmentInteraction(JoinedGroupMemberDetail.DummyItem item) {
+
+    }
+
+    @Override
+    public void onListFragmentInteraction(GroupEventCardContent.GroupEventCardItem item) {
 
     }
 }
