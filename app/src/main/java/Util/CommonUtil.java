@@ -104,7 +104,6 @@ public class CommonUtil {
         return decodedImage;
     }
 
-
     public static boolean permissions(List<String> listPermissionsNeeded, Activity activity) {
 
         if (!listPermissionsNeeded.isEmpty()) {
@@ -114,5 +113,4 @@ public class CommonUtil {
         }
         return true;
     }
-
 }

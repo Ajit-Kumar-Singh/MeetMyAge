@@ -26,8 +26,8 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class LoginPresenterImpl  implements LoginContract.Presenter {
-
+public class LoginPresenterImpl  implements LoginContract.Presenter
+{
     private final static String TAG = LoginPresenterImpl.class.getSimpleName();
     private LoginContract.view mLoginView;
     private CallbackManager callbackManager;
@@ -50,7 +50,6 @@ public class LoginPresenterImpl  implements LoginContract.Presenter {
             public void onSuccess(LoginResult loginResult) {
                 loginButton.setVisibility(View.INVISIBLE);
                 saveProfileToServer(loginResult);
-
             }
 
             @Override
@@ -194,5 +193,4 @@ public class LoginPresenterImpl  implements LoginContract.Presenter {
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         callbackManager.onActivityResult(requestCode, resultCode, data);
     }
-
 }

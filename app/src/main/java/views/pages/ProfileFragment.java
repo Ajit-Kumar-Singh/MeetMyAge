@@ -2,6 +2,9 @@ package views.pages;
 
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
+import android.arch.lifecycle.Observer;
+import android.arch.lifecycle.ViewModel;
+import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -43,6 +46,7 @@ import data.model.ProfilePhotoResponse;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+import viewmodel.ProfileViewModel;
 
 import static android.app.Activity.RESULT_OK;
 import static com.facebook.FacebookSdk.getApplicationContext;
@@ -69,6 +73,7 @@ public class ProfileFragment extends Fragment {
     @BindView(R.id.addPhoto) FloatingActionButton mAddPhoto;
 
     private ProgressDialog mProgressDialog;
+    private ProfileViewModel mViewModel;
 
     public ProfileFragment() {
         // Required empty public constructor
@@ -85,6 +90,11 @@ public class ProfileFragment extends Fragment {
             // Inflate the layout for this fragment
             View view =  inflater.inflate(R.layout.fragment_profile, container, false);
             ButterKnife.bind(this,view);
+            mProgressDialog = new ProgressDialog(getActivity());
+            mProgressDialog.setMessage("Fetching Data");
+            mProgressDialog.setCancelable(false);
+
+            mViewModel = ViewModelProviders.of(this).get(ProfileViewModel.class);
             return view;
     }
 
@@ -126,7 +136,7 @@ public class ProfileFragment extends Fragment {
         Bitmap profileBitmap = ((BottomNavigation)getActivity()).getBitmap();
         if (profileBitmap == null)
         {
-            fetchProfilePicFromServerAndSaveToBitmap();
+            observeProfilePic();
         }
         else
         {
@@ -134,44 +144,32 @@ public class ProfileFragment extends Fragment {
         }
     }
 
-    private void fetchProfilePicFromServerAndSaveToBitmap()
+    private void observeProfilePic()
     {
-        mProgressDialog = new ProgressDialog(getActivity());
-        mProgressDialog.setMessage("Fetching Data");
-        mProgressDialog.setCancelable(false);
         mProgressDialog.show();
-
-        //Update Data to server
-        ApiInterface apiService =
-                ApiClient.getClient().create(ApiInterface.class);
-
-        Call<ProfilePhotoResponse> call = null;
-        call = apiService.fetchProfileData(SessionManagementUtil.getUserData().getProfileId());
-        call.enqueue(new Callback<ProfilePhotoResponse>() {
+        mViewModel.getProfileImagePath().observe(this, new Observer<String>() {
             @Override
-            public void onResponse(Call<ProfilePhotoResponse> call, Response<ProfilePhotoResponse> response) {
-                ProfilePhotoResponse responseProfile = response.body();
-                String data = responseProfile.getData();
-                if (data.isEmpty())
+            public void onChanged(@Nullable String s) {
+                if (s!=null)
                 {
-                    mImageView.setBackgroundResource(R.drawable.man);
+                    if (s.isEmpty())
+                    {
+                        mImageView.setBackgroundResource(R.drawable.man);
+                        mProgressDialog.hide();
+                    }
+                    else
+                    {
+                        Bitmap profileBitmap = null;
+                        profileBitmap = CommonUtil.convertStringToBitmap(s);
+                        mImageView.setImageBitmap(profileBitmap);
+                        ((BottomNavigation)getActivity()).setBitmap(profileBitmap);
+                        mProgressDialog.hide();
+                    }
                 }
                 else
                 {
-                    Bitmap profileBitmap = null;
-                    profileBitmap = CommonUtil.convertStringToBitmap(responseProfile.getData());
-                    mImageView.setImageBitmap(profileBitmap);
-                    ((BottomNavigation)getActivity()).setBitmap(profileBitmap);
+                    mProgressDialog.show();
                 }
-                mProgressDialog.hide();
-            }
-
-            @Override
-            public void onFailure(Call<ProfilePhotoResponse> call, Throwable t) {
-                // Log error here since request failed
-                mProgressDialog.hide();
-                mImageView.setBackgroundResource(R.drawable.man);
-                Log.e(TAG, t.toString());
             }
         });
     }
@@ -235,39 +233,7 @@ public class ProfileFragment extends Fragment {
         BitmapFactory.Options bmOptions = new BitmapFactory.Options();
         Bitmap profileBitmap = BitmapFactory.decodeFile(mImagePath, bmOptions);
         mImageView.setImageBitmap(profileBitmap);
-        saveImageProfilePicToServer();
-    }
-
-    private void saveImageProfilePicToServer()
-    {
-        BitmapFactory.Options bmOptions = new BitmapFactory.Options();
-        Bitmap profileBitmap = BitmapFactory.decodeFile(mImagePath, bmOptions);
-
-        if (profileBitmap != null)
-        {
-            String base64String = CommonUtil.encodeImage(profileBitmap);
-            //Update Data to server
-            ApiInterface apiService =
-                    ApiClient.getClient().create(ApiInterface.class);
-
-            Call<Void> call = null;
-            call = apiService.uploadProfilePhoto(SessionManagementUtil.getUserData().getProfileId(),
-                    new ProfilePhotoRequest(SessionManagementUtil.getUserData().getProfileName(), base64String));
-            call.enqueue(new Callback<Void>() {
-                @Override
-                public void onResponse(Call<Void> call, Response<Void> response) {
-                    if (response.isSuccessful())
-                    {
-                    }
-                }
-
-                @Override
-                public void onFailure(Call<Void> call, Throwable t)
-                {
-                  
-                }
-            });
-        }
+        mViewModel.saveImageProfilePicToServer(mImagePath);
     }
 
     // TODO: Rename method, update argument and hook method into UI event
