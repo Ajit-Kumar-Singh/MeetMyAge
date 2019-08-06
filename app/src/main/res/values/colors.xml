@@ -1,9 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#3F51B5</color>
-    <color name="colorPrimaryDark">#303F9F</color>
+    <color name="colorPrimary">#012B74</color>
+    <color name="colorPrimaryDark">#012B74</color>
     <color name="colorAccent">#FF4081</color>
-    <color name="mma_theme">#8E24AA</color>
-    <color name="mma_medium_theme">#8E24AA</color>
+    <color name="mma_theme">#012B74</color>
+    <color name="mma_image_background">#01B9F5</color>
+    <color name="background_floating_material_light">#01B9F5</color>
+    <color name="textColorBlack">#000000</color>
+    <color name="chat_message_background_color">#FFFFFF</color>
+    <color name="chat_messages_background_color">#F5F5F5</color>
 
 </resources>

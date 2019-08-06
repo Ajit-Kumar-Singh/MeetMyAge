@@ -88,6 +88,19 @@ public class SessionManagementUtil {
         editor.commit();
     }
 
+    public static void logoutSession(){
+        // Storing login value as TRUE
+        editor.putBoolean(IS_LOGIN, false);
+        editor.putInt(KEY_ID, -1);
+        editor.putString(KEY_ABOUT,null);
+        editor.putString(KEY_WORK, null);
+        // Storing name in pref
+        editor.putString(KEY_NAME, null);
+        // Storing email in pref
+        editor.putString(KEY_EMAIL, null);
+        editor.commit();
+    }
+
     public static void updateProfile(String name, String email, String about, String work){
         // Storing login value as TRUE
 
@@ -142,7 +155,22 @@ public class SessionManagementUtil {
 
      public static Profile getUserData()
      {
-         return  new Profile(pref.getInt(KEY_ID,0), pref.getString(KEY_NAME,""), pref.getString(KEY_ABOUT,""),pref.getString(KEY_WORK,""), getLocation());
+         int profileId = pref.getInt(KEY_ID, -1);
+         if (profileId > 0) {
+             Profile personProfile = new Profile(pref.getInt(KEY_ID, 0), pref.getString(KEY_NAME, ""), pref.getString(KEY_ABOUT, ""), pref.getString(KEY_WORK, ""), getLocation());
+             personProfile.setProfileEmail(pref.getString(KEY_EMAIL, ""));
+             return personProfile;
+         } else {
+             return null;
+         }
+     }
+
+     public static Long getProfileId() {
+        return Long.valueOf(getUserData().getProfileId());
+     }
+
+     public static String getProfileEmail() {
+        return getUserData().getProfileEmail();
      }
 
     public static List<Group> getRecommendedGroups() {

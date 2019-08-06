@@ -2,8 +2,10 @@ package views.pages;
 
 import android.content.Context;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,9 +14,13 @@ import android.widget.TextView;
 
 import com.meetmyage.com.meetmyageapp.R;
 
+import org.jivesoftware.smack.AbstractXMPPConnection;
+import org.jivesoftware.smack.ConnectionConfiguration;
+import org.jivesoftware.smack.tcp.XMPPTCPConnection;
+import org.jivesoftware.smack.tcp.XMPPTCPConnectionConfiguration;
+
 
 public class EventsDetailsFragment extends Fragment {
-
     private OnFragmentInteractionListener mListener;
     LayoutInflater mInflater;
     public EventsDetailsFragment() {
@@ -24,7 +30,43 @@ public class EventsDetailsFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        MyChatTask myChatTask = new MyChatTask();
+        myChatTask.execute("");
     }
+
+    private class MyChatTask extends AsyncTask<String, String, String> {
+
+        @Override
+        protected String doInBackground(String... strings) {
+            XMPPTCPConnectionConfiguration config = XMPPTCPConnectionConfiguration.builder()
+                    .setUsernameAndPassword("oola@localhost", "Welcome1")
+                    .setHost("localhost")
+                    .setSecurityMode(ConnectionConfiguration.SecurityMode.disabled)
+                    .setServiceName("localhost")
+                    .setPort(5222)
+                    .setDebuggerEnabled(true) // to view what's happening in detail
+                    .build();
+
+            AbstractXMPPConnection conn1 = new XMPPTCPConnection(config);
+            try {
+                conn1.connect();
+                if (conn1.isConnected()) {
+                    Log.w("app", "conn done");
+                }
+                conn1.login();
+
+                if (conn1.isAuthenticated()) {
+                    Log.w("app", "Auth done");
+                }
+            } catch (Exception e) {
+                Log.w("app", e.toString());
+            }
+            return null;
+        }
+
+    }
+
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
