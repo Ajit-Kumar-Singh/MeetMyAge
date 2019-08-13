@@ -2,6 +2,7 @@ package views.pages;
 
 import android.content.Context;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
@@ -18,6 +19,16 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.meetmyage.com.meetmyageapp.R;
+
+import org.jivesoftware.smack.AbstractXMPPConnection;
+import org.jivesoftware.smack.ConnectionConfiguration;
+import org.jivesoftware.smack.chat.Chat;
+import org.jivesoftware.smack.chat.ChatManager;
+import org.jivesoftware.smack.chat.ChatManagerListener;
+import org.jivesoftware.smack.chat.ChatMessageListener;
+import org.jivesoftware.smack.packet.Message;
+import org.jivesoftware.smack.tcp.XMPPTCPConnection;
+import org.jivesoftware.smack.tcp.XMPPTCPConnectionConfiguration;
 
 import java.util.Iterator;
 import java.util.List;
@@ -54,6 +65,7 @@ public class RecommendedGroupsFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
     }
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,

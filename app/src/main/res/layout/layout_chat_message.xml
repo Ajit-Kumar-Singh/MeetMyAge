@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
+    <data>
+        <import type="android.view.Gravity"/>
+        <import type="android.view.View"/>
+        <variable
+            name="groupMessage"
+            type="data.model.message.GroupMessage" />
+    </data>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:paddingLeft="5dp"
+        android:paddingRight="5dp"
+        android:textAlignment="center"
+        android:gravity="@{groupMessage.senderSelf ? Gravity.END : Gravity.START}">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:text="@{groupMessage.sender}"
+            android:textAlignment="viewStart"
+            android:textColor="@android:color/black"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:visibility="@{groupMessage.hideSender ? View.GONE : View.VISIBLE}" />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@{groupMessage.chatMessage}"
+            android:textAlignment="viewStart"
+            android:textColor="@color/textColorBlack"
+            android:textSize="14sp"
+            android:background="@color/chat_message_background_color"
+            android:visibility="@{groupMessage.senderSelf ? View.GONE : View.VISIBLE}"
+            />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@{groupMessage.chatMessage}"
+            android:textAlignment="viewEnd"
+            android:textColor="@color/textColorBlack"
+            android:textSize="14sp"
+            android:background="@color/chat_message_background_color"
+            android:visibility="@{groupMessage.senderSelf ? View.VISIBLE : View.GONE}"/>
+    </LinearLayout>
+</layout>

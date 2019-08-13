@@ -7,15 +7,11 @@
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
     </style>
-    <style name="MMATheme" parent="@android:style/Theme.Light">
-        <item name="android:background">#8E24AA</item>
-    </style>
+
     <style name="AppTheme.NoActionBar">
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
     </style>
-
-    <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
 
     <style name="MMA_TextTitle">
         <item name="android:fontFamily" tools:ignore="NewApi">sans-serif-medium</item>

@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:padding="5dp"
+    android:layout_height="match_parent"
+    tools:context="views.pages.GroupChat">
+    <LinearLayout
+        android:id="@+id/group_info"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toTopOf="@+id/separator_header_messages"
+        app:layout_constraintTop_toTopOf="parent"
+        android:orientation="horizontal"
+        android:gravity="center_vertical">
+        <ImageButton
+            android:id="@+id/back_button"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            tools:srcCompat="@drawable/ic_arrow_back_black_24dp"/>
+        <include
+            android:id="@+id/header"
+            layout="@layout/layout_group_chat_header"
+            tools:layout_editor_absoluteX="8dp" />
+    </LinearLayout>
+
+
+    <include
+        android:id="@+id/separator_header_messages"
+        layout="@layout/layout_separator"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@+id/group_info"/>
+
+    <include
+        android:id="@+id/group_messages"
+        layout="@layout/layout_group_chat_messages"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toTopOf="@+id/separator"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/separator_header_messages" />
+    <!-- A horizontal line between the chatbox and RecyclerView -->
+    <include
+        android:id="@+id/separator"
+        layout="@layout/layout_separator"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toTopOf="@id/chatbox"
+        tools:layout_editor_absoluteX="0dp" />
+
+    <LinearLayout
+        android:id="@+id/chatbox"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="64dp"
+        android:background="#ffffff"
+        android:orientation="horizontal"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent">
+
+        <EditText
+            android:id="@+id/edittext_chatbox"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp"
+            android:layout_weight="1"
+            android:background="@android:color/transparent"
+            android:hint="Enter message"
+            android:maxLines="6" />
+
+        <Button
+            android:id="@+id/button_chatbox_send"
+            android:layout_width="64dp"
+            android:layout_height="48dp"
+            android:layout_gravity="center"
+            android:background="?attr/selectableItemBackground"
+            android:clickable="true"
+            android:gravity="center"
+            android:text="SEND"
+            android:textSize="14dp" />
+
+    </LinearLayout>
+
+</android.support.constraint.ConstraintLayout>

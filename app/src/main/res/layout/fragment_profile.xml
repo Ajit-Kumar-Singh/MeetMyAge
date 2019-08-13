@@ -9,7 +9,8 @@
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="201dp">
+        android:layout_height="201dp"
+        android:background="@color/mma_image_background">
 
         <de.hdodenhof.circleimageview.CircleImageView
             android:id="@+id/profileImage"
@@ -37,10 +38,11 @@
             app:borderWidth="0dp" />
 
     </RelativeLayout>
+
     <LinearLayout
         android:id="@+id/layoutPreview"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:layout_margin="20dp"
         android:orientation="vertical">
 
@@ -55,8 +57,8 @@
             android:layout_width="match_parent"
             android:layout_height="1dp"
             android:layout_marginLeft="10dp"
-            android:layout_marginRight="10dp"
             android:layout_marginTop="12dp"
+            android:layout_marginRight="10dp"
             android:layout_marginBottom="10dp"
             android:background="@color/mma_theme" />
 
@@ -64,8 +66,8 @@
             android:id="@+id/cityLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="8dp"
-            android:layout_marginTop="8dp">
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="8dp">
 
             <ImageButton
                 android:id="@+id/imageButton2"
@@ -86,8 +88,9 @@
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="8dp"
-            android:layout_alignBottom="@+id/cityLayout">
+            android:layout_alignBottom="@+id/cityLayout"
+            android:layout_marginBottom="8dp">
+
             <ImageButton
                 android:id="@+id/imageButton3"
                 android:layout_width="wrap_content"
@@ -95,12 +98,13 @@
                 android:layout_marginRight="14dp"
                 android:background="@drawable/com_facebook_auth_dialog_background"
                 app:srcCompat="@drawable/ic_work_mma_24dp" />
+
             <TextView
                 android:id="@+id/profileWork"
                 style="@style/MMA_TextContent"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_toRightOf="@+id/imageButton3"/>
+                android:layout_toRightOf="@+id/imageButton3" />
 
         </RelativeLayout>
 
@@ -108,6 +112,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="8dp">
+
             <ImageButton
                 android:id="@+id/imageButton4"
                 android:layout_width="wrap_content"
@@ -115,19 +120,20 @@
                 android:layout_marginRight="14dp"
                 android:background="@drawable/com_facebook_auth_dialog_background"
                 app:srcCompat="@drawable/ic_description_mma_24dp" />
+
             <TextView
                 android:id="@+id/profileStory"
                 style="@style/MMA_TextContent"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_toRightOf="@+id/imageButton4"
-                />
+                android:layout_toRightOf="@+id/imageButton4" />
         </RelativeLayout>
 
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="8dp">
+
             <ImageButton
                 android:id="@+id/imageButton5"
                 android:layout_width="wrap_content"
@@ -135,12 +141,13 @@
                 android:layout_marginRight="14dp"
                 android:background="@drawable/com_facebook_auth_dialog_background"
                 app:srcCompat="@drawable/ic_email_mma_24dp" />
+
             <TextView
                 android:id="@+id/emailId"
                 style="@style/MMA_TextContent"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_toRightOf="@+id/imageButton5"/>
+                android:layout_toRightOf="@+id/imageButton5" />
         </RelativeLayout>
 
         <View
@@ -166,13 +173,13 @@
 
                 <android.support.design.widget.FloatingActionButton
                     android:id="@+id/setting"
-                    app:borderWidth="0dp"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="top|center_horizontal"
                     android:layout_margin="@dimen/fab_margin"
                     android:src="@drawable/ic_settings_black_24dp"
-                    app:backgroundTint="#ffffff" />
+                    app:backgroundTint="#ffffff"
+                    app:borderWidth="0dp" />
             </LinearLayout>
 
             <LinearLayout
@@ -189,7 +196,7 @@
                     android:layout_gravity="top|center_horizontal"
                     android:layout_margin="@dimen/fab_margin"
                     android:src="@drawable/ic_mode_edit_black_24dp"
-                    app:backgroundTint="#ffffff"  />
+                    app:backgroundTint="#ffffff" />
             </LinearLayout>
 
             <LinearLayout
@@ -206,9 +213,16 @@
                     android:layout_gravity="top|center_horizontal"
                     android:layout_margin="@dimen/fab_margin"
                     android:src="@drawable/ic_notifications_black_24dp"
-                    app:backgroundTint="#ffffff"  />
+                    app:backgroundTint="#ffffff" />
             </LinearLayout>
         </LinearLayout>
     </LinearLayout>
+    <Button
+        android:id="@+id/logout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@color/com_facebook_button_background_color"
+        android:layout_gravity="top|center_horizontal"
+        android:text="@string/com_facebook_loginview_log_out_button" />
 </LinearLayout>
 

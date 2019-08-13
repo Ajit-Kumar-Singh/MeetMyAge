@@ -3,20 +3,28 @@ package data.model;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class Group {
+import java.util.List;
 
+public class Group {
     @SerializedName("groupId")
     @Expose
     private Integer groupId;
     @SerializedName("groupName")
     @Expose
     private String groupName;
+
+    @SerializedName("groupImageUrl")
+    @Expose
+    private String groupImageUrl;
+
     @SerializedName("groupStory")
     @Expose
     private String groupStory;
     @SerializedName("location")
     @Expose
     private Location location;
+
+    private List<Profile> members;
 
     public Integer getGroupId() {
         return groupId;
@@ -50,5 +58,18 @@ public class Group {
         this.location = location;
     }
 
+    public void setGroupImageUrl(String pGroupImageUrl) {
+        this.groupImageUrl = pGroupImageUrl;
+    }
+
+    public String getGroupImageUrl() {
+        return groupImageUrl;
+    }
+
+    public void setMembers(List<Profile> members) {
+        this.members = members;
+    }
+
+    public List<Profile> getMembers() {return members;};
 
 }

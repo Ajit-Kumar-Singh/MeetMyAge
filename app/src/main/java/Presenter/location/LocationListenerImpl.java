@@ -22,6 +22,9 @@ public class LocationListenerImpl implements LocationListener {
         locationManager = (LocationManager) mContext.getSystemService(Context.LOCATION_SERVICE);
         Criteria criteria = new Criteria();
         String bestProvider = String.valueOf(locationManager.getBestProvider(criteria, true)).toString();
+        if (bestProvider == null || bestProvider.equals("null")) {
+            bestProvider = LocationManager.GPS_PROVIDER;
+        }
         Log.i("BEST PROVIDER", bestProvider);
         mLocation = null;
         try {

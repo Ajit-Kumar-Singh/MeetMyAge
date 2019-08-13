@@ -1,27 +1,57 @@
 package views.pages;
 
 import android.annotation.SuppressLint;
+import android.app.Service;
+import android.content.ComponentName;
+import android.content.Context;
 import android.content.Intent;
+import android.content.ServiceConnection;
 import android.content.pm.ActivityInfo;
 import android.graphics.Bitmap;
 import android.graphics.Rect;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.IBinder;
+import android.os.Looper;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.annotation.RequiresApi;
 import android.support.design.internal.BottomNavigationItemView;
 import android.support.design.internal.BottomNavigationMenuView;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewTreeObserver;
 
+import com.google.gson.GsonBuilder;
+import com.google.gson.reflect.TypeToken;
 import com.meetmyage.com.meetmyageapp.R;
 
+import org.apache.commons.lang3.StringEscapeUtils;
+import org.jivesoftware.smack.chat.Chat;
+import org.jivesoftware.smack.chat.ChatManager;
+import org.jivesoftware.smack.chat.ChatManagerListener;
+import org.jivesoftware.smack.chat.ChatMessageListener;
+import org.jivesoftware.smack.packet.Message;
+import org.jivesoftware.smack.packet.Session;
+
 import java.lang.reflect.Field;
+import java.lang.reflect.Type;
+import java.util.List;
+
+import data.SessionManagementUtil;
+import data.model.Group;
+import data.model.Location;
+import data.model.message.MessageParcel;
+import mma.SmackChatManager;
+import mma.receivers.broadcast.IncomingGroupMessageReceiver;
+import mma.receivers.broadcast.OfflineBroadcastReceiver;
 
 public class BottomNavigation extends AppCompatActivity implements ProfileFragment.OnFragmentInteractionListener, EditProfileFragment.OnFragmentInteractionListener,
 EventsDetailsFragment.OnFragmentInteractionListener,
@@ -30,7 +60,8 @@ RecommendedGroupsFragment.OnFragmentInteractionListener,
 ProfileDetails.OnFragmentInteractionListener,
 ProfileSettings.OnFragmentInteractionListener,
 JoinedGroupMembers.OnListFragmentInteractionListener,
-GroupEventsFragment.OnListFragmentInteractionListener
+GroupEventsFragment.OnListFragmentInteractionListener,
+        MyGroupsFragment.OnFragmentInteractionListener
 {
     private Bitmap mBitmap = null;
     private BottomNavigationView bottomNavigationView;
@@ -39,7 +70,18 @@ GroupEventsFragment.OnListFragmentInteractionListener
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_tabbedlayout);
-
+        //TempFix for location
+        Location location = SessionManagementUtil.getLocation();
+        if (location == null) {
+            Location tempLocation = new Location();
+            tempLocation.setAddressLine1("Prime Legend Apartment");
+            tempLocation.setCity("Hyderabad");
+            tempLocation.setState("Telengana");
+            tempLocation.setPinCode(500084L);
+            tempLocation.setLatitude(17.385044);
+            tempLocation.setLongitude(78.486671);
+            SessionManagementUtil.updateLocation(tempLocation);
+        }
         this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         bottomNavigationView = (BottomNavigationView) findViewById(R.id.default_bottom_navigation);
         bottomNavigationView.setSelectedItemId(R.id.groups);
@@ -62,7 +104,7 @@ GroupEventsFragment.OnListFragmentInteractionListener
                                 break;
                             case R.id.events:
                                 item.setCheckable(true);
-                                Fragment eventFragment= new GroupEventsFragment();
+                                Fragment eventFragment= new MyGroupsFragment();
                                 getSupportFragmentManager().beginTransaction().replace(R.id.fragment_conatiner, eventFragment).commit();
                                 break;
                             case R.id.profile:
@@ -74,6 +116,8 @@ GroupEventsFragment.OnListFragmentInteractionListener
                         return true;
                     }
                 });
+        MyChatAsyncTask myChatAsyncTask = new MyChatAsyncTask(this);
+        myChatAsyncTask.execute();
     }
     @Override
     protected void onResume() {
@@ -127,7 +171,7 @@ GroupEventsFragment.OnListFragmentInteractionListener
 
     private void loadDefaultFragment()
     {
-        Fragment groupsFragment = new RecommendedGroupsFragment();
+        Fragment groupsFragment = new ProfileFragment();
         getSupportFragmentManager().beginTransaction().replace(R.id.fragment_conatiner, groupsFragment).commit();
     }
     @Override
@@ -192,5 +236,79 @@ GroupEventsFragment.OnListFragmentInteractionListener
     @Override
     public void onListFragmentInteraction(GroupEventCardContent.GroupEventCardItem item) {
 
+    }
+
+    public ServiceConnection getChatServiceConnection(final Context pContext) {
+        return new ServiceConnection() {
+
+            @Override
+            public void onServiceConnected(ComponentName componentName, IBinder iBinder) {
+
+            }
+
+            @Override
+            public void onServiceDisconnected(ComponentName componentName) {
+
+            }
+        };
+    }
+
+    public class ChatService extends Service {
+
+        @Nullable
+        @Override
+        public IBinder onBind(Intent intent) {
+            return null;
+        }
+    }
+
+    public class MyChatAsyncTask extends AsyncTask {
+        private Context context;
+        public MyChatAsyncTask(Context pContext) {
+            this.context = pContext;
+        }
+        @Override
+        protected Object doInBackground(Object[] objects) {
+            Looper.prepare();
+            OfflineBroadcastReceiver groupMessageReceiver = IncomingGroupMessageReceiver.getInstance();
+            LocalBroadcastManager.getInstance(this.context).registerReceiver(groupMessageReceiver, groupMessageReceiver.getCriteria());
+            ChatManager chatManager = SmackChatManager.getInstance().getChatManager();
+            chatManager.addChatListener(new MmaChatManagerListener(this.context));
+            Looper.loop();
+            return null;
+        }
+    }
+
+    public class MmaChatManagerListener implements ChatManagerListener {
+        private Context context;
+        public MmaChatManagerListener(Context pContext) {
+            context = pContext;
+        }
+        @Override
+        public void chatCreated(Chat chat, boolean b) {
+            chat.addMessageListener(new ChatMessageListener() {
+                @Override
+                public void processMessage(Chat chat, Message message) {
+                    if (message.getBody() != null) {
+                        String loggedInUserEmail = SessionManagementUtil.getUserData().getProfileEmail();
+                        String messageBody = message.getBody();
+                        messageBody = StringEscapeUtils.unescapeHtml4(messageBody);
+                        GsonBuilder gsonBuilder = new GsonBuilder();
+                        Type messageType = new TypeToken<List<Group>>() {}.getType();
+                        gsonBuilder.registerTypeAdapter(messageType, MessageParcel.getJsonDeserializer());
+                        MessageParcel messageParcel = gsonBuilder.create().fromJson(messageBody, messageType);
+                        if (messageParcel.getMessage() != null && !loggedInUserEmail.equals(messageParcel.getMessage().getSender())) {
+                            messageParcel.getMessage().setIncomingMessage(true);
+                        }
+                        if (messageParcel.getMessage().isIncomingMessage()) {
+                            Intent messageIntent = new Intent(messageParcel.getMessageType());
+                            messageIntent.putExtra("messageParcel", messageParcel);
+                            LocalBroadcastManager.getInstance(context).sendBroadcast(messageIntent);
+                        }
+                    }
+                }
+            });
+
+        }
     }
 }
