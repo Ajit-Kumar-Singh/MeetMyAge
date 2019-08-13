@@ -24,9 +24,10 @@ public class Profile {
     @Expose
     private Location location;
 
-    public Profile(int id, String name, String about, String work, Location loc) {
+    public Profile(int id, String name, String email,String about, String work, Location loc) {
         this.profileId = id;
         this.profileName = name;
+        this.profileEmail = email;
         this.profileStory = about;
         this.profileWork = work;
         this.location = loc;

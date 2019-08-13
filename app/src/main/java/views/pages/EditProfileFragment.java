@@ -122,14 +122,18 @@ public class EditProfileFragment extends Fragment {
 
         Call<Profile> call = null;
         call = apiService.updateProfile(SessionManagementUtil.getUserData().getProfileId(),
-                    new Profile(SessionManagementUtil.getUserData().getProfileId(),profileName.getText().toString(),profileStory.getText().toString(),profileWork.getText().toString(),new Location()));
+                    new Profile(SessionManagementUtil.getUserData().getProfileId(),
+                            profileName.getText().toString(),
+                            SessionManagementUtil.getUserData().getProfileEmail(),
+                            profileStory.getText().toString(),
+                            profileWork.getText().toString(),new Location()));
 
         call.enqueue(new Callback<Profile>() {
             @Override
             public void onResponse(Call<Profile> call, Response<Profile> response) {
                 Profile responseProfile = response.body();
                 SessionManagementUtil.updateProfile(
-                        responseProfile.getProfileName(),"",responseProfile.getProfileStory(),responseProfile.getProfileWork());
+                        responseProfile.getProfileName(),responseProfile.getProfileEmail(),responseProfile.getProfileStory(),responseProfile.getProfileWork());
                 FragmentTransaction trans = getFragmentManager()
                         .beginTransaction();
                 trans.replace(R.id.fragment_conatiner, new ProfileFragment());

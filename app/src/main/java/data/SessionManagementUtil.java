@@ -99,7 +99,6 @@ public class SessionManagementUtil {
 
         // Storing email in pref
         editor.putString(KEY_EMAIL, email);
-
         // commit changes
         editor.commit();
     }
@@ -142,7 +141,7 @@ public class SessionManagementUtil {
 
      public static Profile getUserData()
      {
-         return  new Profile(pref.getInt(KEY_ID,0), pref.getString(KEY_NAME,""), pref.getString(KEY_ABOUT,""),pref.getString(KEY_WORK,""), getLocation());
+         return  new Profile(pref.getInt(KEY_ID,0), pref.getString(KEY_NAME,""), pref.getString(KEY_EMAIL,""), pref.getString(KEY_ABOUT,""),pref.getString(KEY_WORK,""), getLocation());
      }
 
     public static List<Group> getRecommendedGroups() {

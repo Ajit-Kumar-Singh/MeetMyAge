@@ -12,6 +12,8 @@ import android.view.ViewGroup;
 
 import com.meetmyage.com.meetmyageapp.R;
 
+import adapter.GroupEventsRecyclerViewAdapter;
+
 /**
  * A fragment representing a list of Items.
  * <p/>
